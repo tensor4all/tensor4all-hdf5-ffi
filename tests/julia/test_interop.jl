@@ -106,7 +106,7 @@ function verify_rust_test_file(filepath::String)
 
     h5open(filepath, "r") do file
         # Read and verify attribute
-        attr_value = read_attribute(file, "test_attr")
+        attr_value = HDF5.read_attribute(file, "test_attr")
         @test attr_value == "hello from rust"
         println("  Attribute 'test_attr': $attr_value")
 
