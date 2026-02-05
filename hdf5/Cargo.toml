@@ -14,12 +14,15 @@ homepage.workspace = true
 edition.workspace = true
 
 [features]
-default = []
+default = ["link"]
+# Link mode: use hdf5-sys for build-time linking (default)
+link = ["dep:hdf5-sys"]
 # Enable complex number type support.
 complex = ["hdf5-types/complex"]
 # Enable float16 type support.
 f16 = ["hdf5-types/f16"]
 # Runtime library loading via dlopen (for Julia/Python bindings)
+# Note: link and runtime-loading are mutually exclusive
 runtime-loading = ["dep:libloading"]
 
 # The features with version numbers such as 1.10.3, 1.12.0 are metafeatures
@@ -37,10 +40,11 @@ ndarray = ">=0.15, <=0.17"
 parking_lot = "0.12"
 paste = "1.0"
 # internal
-hdf5-sys = { workspace = true }
+hdf5-sys = { workspace = true, optional = true }
 hdf5-types = { workspace = true }
 
 [dev-dependencies]
+clap = { version = "4", features = ["derive"] }
 half = { workspace = true }
 num-complex = { workspace = true }
 parking_lot = "0.12.3"
