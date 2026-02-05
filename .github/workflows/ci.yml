@@ -85,5 +85,9 @@ jobs:
         uses: dtolnay/rust-toolchain@stable
       - name: Install HDF5
         run: brew install hdf5
+      - name: Set HDF5 environment
+        run: |
+          HDF5_PREFIX=$(brew --prefix hdf5)
+          echo "HDF5_DIR=${HDF5_PREFIX}" >> $GITHUB_ENV
       - name: Build and test
         run: cargo test --workspace --verbose
