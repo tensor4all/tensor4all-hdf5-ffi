@@ -23,8 +23,8 @@ pub use libc::{
 pub type hid_t = i64;
 /// HDF5 error return type
 pub type herr_t = c_int;
-/// HDF5 boolean type
-pub type hbool_t = c_uint;
+/// HDF5 boolean type (`_Bool` in C, 1 byte on all modern systems with `<stdbool.h>`)
+pub type hbool_t = u8;
 /// HDF5 size type (unsigned)
 pub type hsize_t = c_ulong;
 /// HDF5 signed size type
