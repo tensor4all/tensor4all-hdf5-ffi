@@ -13,11 +13,14 @@ use crate::sys::{h5e, h5p, h5t};
 
 use crate::internal_prelude::*;
 
+// Link mode: use H5GlobalConstant wrapper
+#[cfg(feature = "link")]
 pub struct H5GlobalConstant(
     #[cfg(msvc_dll_indirection)] &'static usize,
     #[cfg(not(msvc_dll_indirection))] &'static hdf5_sys::h5i::hid_t,
 );
 
+#[cfg(feature = "link")]
 impl std::ops::Deref for H5GlobalConstant {
     type Target = hdf5_sys::h5i::hid_t;
     fn deref(&self) -> &Self::Target {
@@ -36,9 +39,18 @@ impl std::ops::Deref for H5GlobalConstant {
     }
 }
 
+#[cfg(feature = "link")]
 macro_rules! link_hid {
     ($rust_name:ident, $c_name:path) => {
         pub static $rust_name: H5GlobalConstant = H5GlobalConstant($c_name);
+    };
+}
+
+// Runtime-loading mode: use LazyLock with function calls
+#[cfg(all(feature = "runtime-loading", not(feature = "link")))]
+macro_rules! link_hid {
+    ($rust_name:ident, $c_name:path) => {
+        pub static $rust_name: LazyLock<hid_t> = LazyLock::new(|| $c_name());
     };
 }
 
@@ -360,14 +372,30 @@ pub static H5FD_MULTI: LazyLock<hid_t> = LazyLock::new(|| {
 });
 
 // MPI-IO file driver
-#[cfg(all(feature = "2.0.0", all(feature = "have-parallel", feature = "mpio")))]
+#[cfg(all(feature = "link", feature = "2.0.0", all(feature = "have-parallel", feature = "mpio")))]
 pub static H5FD_MPIO: LazyLock<hid_t> = LazyLock::new(|| *hdf5_sys::h5p::H5FD_MPIO_id);
-#[cfg(all(feature = "2.0.0", not(all(feature = "have-parallel", feature = "mpio"))))]
+#[cfg(all(
+    feature = "link",
+    feature = "2.0.0",
+    not(all(feature = "have-parallel", feature = "mpio"))
+))]
 pub static H5FD_MPIO: LazyLock<hid_t> = LazyLock::new(|| H5I_INVALID_HID);
 
-#[cfg(all(not(feature = "2.0.0"), all(feature = "have-parallel", feature = "mpio")))]
+#[cfg(all(
+    feature = "link",
+    not(feature = "2.0.0"),
+    all(feature = "have-parallel", feature = "mpio")
+))]
 pub static H5FD_MPIO: LazyLock<hid_t> = LazyLock::new(|| h5lock!(hdf5_sys::h5fd::H5FD_mpio_init()));
-#[cfg(all(not(feature = "2.0.0"), not(all(feature = "have-parallel", feature = "mpio"))))]
+#[cfg(all(
+    feature = "link",
+    not(feature = "2.0.0"),
+    not(all(feature = "have-parallel", feature = "mpio"))
+))]
+pub static H5FD_MPIO: LazyLock<hid_t> = LazyLock::new(|| H5I_INVALID_HID);
+
+// Runtime-loading mode: MPI not supported
+#[cfg(all(feature = "runtime-loading", not(feature = "link")))]
 pub static H5FD_MPIO: LazyLock<hid_t> = LazyLock::new(|| H5I_INVALID_HID);
 
 // Direct VFD

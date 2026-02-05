@@ -32,7 +32,7 @@ unsafe impl H5Type for ObjectReference1 {
 impl ObjectReferencePrivate for ObjectReference1 {}
 
 impl ObjectReference for ObjectReference1 {
-    const REF_TYPE: hdf5_sys::h5r::H5R_type_t = H5R_OBJECT1;
+    const REF_TYPE: crate::sys::h5r::H5R_type_t = H5R_OBJECT1;
 
     fn ptr(&self) -> *const c_void {
         let pointer = std::ptr::addr_of!(self.inner);
@@ -53,7 +53,7 @@ impl ObjectReference for ObjectReference1 {
         Ok(Self { inner: reference })
     }
 
-    fn get_object_type(&self, location: &Location) -> Result<hdf5_sys::h5o::H5O_type_t> {
+    fn get_object_type(&self, location: &Location) -> Result<crate::sys::h5o::H5O_type_t> {
         let mut objtype = std::mem::MaybeUninit::<H5O_type_t>::uninit();
         h5call!(H5Rget_obj_type2(location.id(), H5R_OBJECT1, self.ptr(), objtype.as_mut_ptr()))?;
         let objtype = unsafe { objtype.assume_init() };

@@ -293,9 +293,9 @@ impl AttributeBuilderInner {
 
         let acpl = PropertyList::from_id(h5call!(H5Pcreate(*H5P_ATTRIBUTE_CREATE))?)?;
         // Set UTF-8 encoding for the attribute name, as Rust strings are UTF-8.
-        h5call!(hdf5_sys::h5p::H5Pset_char_encoding(
+        h5call!(crate::sys::h5p::H5Pset_char_encoding(
             acpl.id(),
-            hdf5_sys::h5t::H5T_cset_t::H5T_CSET_UTF8
+            crate::sys::h5t::H5T_cset_t::H5T_CSET_UTF8
         ))?;
 
         let name = to_cstring(name)?;

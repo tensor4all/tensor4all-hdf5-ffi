@@ -8,12 +8,12 @@ thread_local! {
 }
 
 pub(crate) static LIBRARY_INIT: LazyLock<()> = LazyLock::new(|| {
-    let _guard = hdf5_sys::LOCK.lock();
+    let _guard = crate::sys::LOCK.lock();
     unsafe {
         // Ensure hdf5 does not invalidate handles which might
         // still be live on other threads on program exit
-        ::hdf5_sys::h5::H5dont_atexit();
-        ::hdf5_sys::h5::H5open();
+        crate::sys::h5::H5dont_atexit();
+        crate::sys::h5::H5open();
         // Ignore errors on stdout
         crate::error::silence_errors_no_sync(true);
         // Register filters lzf/blosc if available
