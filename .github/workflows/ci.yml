@@ -92,3 +92,47 @@ jobs:
           echo "HDF5_DIR=${HDF5_PREFIX}" >> $GITHUB_ENV
       - name: Build and test
         run: cargo test --workspace --verbose
+
+  interop-julia:
+    name: Julia interop
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+      - name: Install Julia
+        uses: julia-actions/setup-julia@v2
+        with:
+          version: '1.10'
+      - name: Install HDF5 (system, for building)
+        run: sudo apt-get update && sudo apt-get install -y libhdf5-dev
+      - name: Setup Julia project
+        run: |
+          cd tests/julia
+          julia --project=. -e 'using Pkg; Pkg.instantiate()'
+      - name: Run Julia interop tests
+        run: |
+          cd tests/julia
+          julia --project=. test_interop.jl
+
+  interop-python:
+    name: Python interop
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+      - name: Install HDF5 (system, for building)
+        run: sudo apt-get update && sudo apt-get install -y libhdf5-dev
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install Python dependencies
+        run: |
+          pip install -r tests/python/requirements.txt
+      - name: Run Python interop tests
+        run: |
+          python tests/python/test_interop.py
