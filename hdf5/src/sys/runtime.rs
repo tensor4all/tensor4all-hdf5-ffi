@@ -58,20 +58,17 @@ pub fn init(path: Option<&str>) -> Result<(), String> {
     let library = unsafe { Library::new(&lib_path) }
         .map_err(|e| format!("Failed to load HDF5 library from {}: {}", lib_path, e))?;
 
-    LIBRARY
-        .set(library)
-        .map_err(|_| "Library already initialized".to_string())?;
-    LIBRARY_PATH
-        .set(lib_path)
-        .map_err(|_| "Library path already set".to_string())?;
+    LIBRARY.set(library).map_err(|_| "Library already initialized".to_string())?;
+    LIBRARY_PATH.set(lib_path).map_err(|_| "Library path already set".to_string())?;
 
     // Initialize HDF5
     unsafe {
-        let h5open: Symbol<unsafe extern "C" fn() -> i32> = LIBRARY
-            .get()
-            .unwrap()
-            .get(b"H5open")
-            .map_err(|e| format!("Failed to load H5open: {}", e))?;
+        let h5open: Symbol<unsafe extern "C" fn() -> i32> =
+            LIBRARY
+                .get()
+                .unwrap()
+                .get(b"H5open")
+                .map_err(|e| format!("Failed to load H5open: {}", e))?;
         h5open();
     }
 
