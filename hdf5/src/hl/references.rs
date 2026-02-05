@@ -51,10 +51,11 @@ impl ReferencedObject {
             H5O_TYPE_GROUP => ReferencedObject::Group(Group::from_id(object_id)?),
             H5O_TYPE_DATASET => ReferencedObject::Dataset(Dataset::from_id(object_id)?),
             H5O_TYPE_NAMED_DATATYPE => ReferencedObject::Datatype(Datatype::from_id(object_id)?),
-            #[cfg(feature = "1.12.0")]
+            #[cfg(any(
+                feature = "1.12.0",
+                all(feature = "runtime-loading", not(feature = "link"))
+            ))]
             H5O_TYPE_MAP => fail!("Can not create object from a map"),
-            #[cfg(not(feature = "1.12.0"))]
-            H5O_TYPE_MAP => fail!("Map objects require HDF5 1.12.0 or later"),
             H5O_TYPE_UNKNOWN => fail!("Unknown datatype"),
             H5O_TYPE_NTYPES => fail!("hdf5 should not produce this type"),
         };

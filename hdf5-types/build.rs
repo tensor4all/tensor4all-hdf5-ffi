@@ -13,6 +13,8 @@ fn main() {
         if key.starts_with("DEP_HDF5_VERSION_") {
             let version = key.trim_start_matches("DEP_HDF5_VERSION_").replace("_", ".");
             println!("cargo::rustc-cfg=feature=\"{version}\"");
+            // Re-export version metadata for dependent crates (e.g., hdf5 in runtime-loading mode)
+            println!("cargo::metadata=VERSION_{version}=1");
         }
     }
 }

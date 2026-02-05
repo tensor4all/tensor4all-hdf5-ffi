@@ -446,10 +446,6 @@ impl Datatype {
                 TD::Reference(hdf5_types::Reference::Std) => {
                     Ok(h5try!(H5Tcopy(*crate::globals::H5T_STD_REF)))
                 }
-                #[cfg(not(feature = "1.12.0"))]
-                TD::Reference(hdf5_types::Reference::Std) => {
-                    Err("Reference::Std requires HDF5 1.12.0 or later".into())
-                }
                 TD::Reference(hdf5_types::Reference::Object) => {
                     Ok(h5try!(H5Tcopy(*crate::globals::H5T_STD_REF_OBJ)))
                 }

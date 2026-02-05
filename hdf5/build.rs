@@ -47,9 +47,13 @@ fn main() {
             "DEP_HDF5_HAVE_FILTER_DEFLATE" => print_feature("have-filter-deflate"),
             // internal config flags
             "DEP_HDF5_MSVC_DLL_INDIRECTION" => print_cfg("msvc_dll_indirection"),
-            // public version features
+            // public version features (from hdf5-sys directly)
             key if key.starts_with("DEP_HDF5_VERSION_") => {
                 print_feature(&key.trim_start_matches("DEP_HDF5_VERSION_").replace('_', "."));
+            }
+            // public version features (from hdf5-types, for runtime-loading mode)
+            key if key.starts_with("DEP_HDF5_TYPES_VERSION_") => {
+                print_feature(&key.trim_start_matches("DEP_HDF5_TYPES_VERSION_").replace('_', "."));
             }
             _ => continue,
         }
