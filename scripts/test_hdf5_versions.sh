@@ -22,20 +22,20 @@ for VERSION in $VERSIONS; do
     export DYLD_LIBRARY_PATH="$HDF5_DIR/lib"
 
     # Clean cargo cache to ensure fresh library linking
-    cargo clean -p tensor4all-hdf5-ffi 2>/dev/null || true
+    cargo clean -p hdf5-rt 2>/dev/null || true
 
     # Run tests for each package separately to avoid macOS HDF5 cleanup issues
-    if cargo test -p tensor4all-hdf5-ffi 2>&1 | tee /dev/stderr | grep -q "test result: ok"; then
-        echo "✓ HDF5 $VERSION: tensor4all-hdf5-ffi OK"
+    if cargo test -p hdf5-rt 2>&1 | tee /dev/stderr | grep -q "test result: ok"; then
+        echo "✓ HDF5 $VERSION: hdf5-rt OK"
     else
-        echo "✗ HDF5 $VERSION: tensor4all-hdf5-ffi FAILED"
+        echo "✗ HDF5 $VERSION: hdf5-rt FAILED"
         FAILED="$FAILED $VERSION"
     fi
 
-    if cargo test -p tensor4all-hdf5-types 2>&1 | tee /dev/stderr | grep -q "test result: ok"; then
-        echo "✓ HDF5 $VERSION: tensor4all-hdf5-types OK"
+    if cargo test -p hdf5-rt-types 2>&1 | tee /dev/stderr | grep -q "test result: ok"; then
+        echo "✓ HDF5 $VERSION: hdf5-rt-types OK"
     else
-        echo "✗ HDF5 $VERSION: tensor4all-hdf5-types FAILED"
+        echo "✗ HDF5 $VERSION: hdf5-rt-types FAILED"
         FAILED="$FAILED $VERSION"
     fi
 

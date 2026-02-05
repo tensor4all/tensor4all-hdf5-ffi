@@ -1,6 +1,6 @@
 [package]
-name = "tensor4all-hdf5-types"
-description = "Native Rust equivalents of HDF5 types - fork for tensor4all"
+name = "hdf5-rt-types"
+description = "Native Rust equivalents of HDF5 types for hdf5-rt"
 readme = "README.md"
 build = "build.rs"
 links = "hdf5_types"

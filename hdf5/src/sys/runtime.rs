@@ -1841,11 +1841,22 @@ hdf5_function!(
         space_id: hid_t,
     ) -> herr_t
 );
-// H5Rdereference - HDF5 1.10.0+ signature (we require 1.12+)
+// H5Rdereference2 - HDF5 1.10.0+ signature (4 parameters)
 hdf5_function!(
-    H5Rdereference,
+    H5Rdereference2,
     fn(obj_id: hid_t, oapl_id: hid_t, ref_type: H5R_type_t, ref_ptr: *const c_void) -> hid_t
 );
+
+/// Alias for H5Rdereference2 for backward compatibility
+#[inline]
+pub unsafe fn H5Rdereference(
+    obj_id: hid_t,
+    oapl_id: hid_t,
+    ref_type: H5R_type_t,
+    ref_ptr: *const c_void,
+) -> hid_t {
+    H5Rdereference2(obj_id, oapl_id, ref_type, ref_ptr)
+}
 hdf5_function!(
     H5Rget_obj_type2,
     fn(

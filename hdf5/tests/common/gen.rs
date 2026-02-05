@@ -2,10 +2,8 @@ use std::convert::TryFrom;
 use std::fmt::{self, Debug};
 use std::iter;
 
-use tensor4all_hdf5_ffi::types::{
-    FixedAscii, FixedUnicode, VarLenArray, VarLenAscii, VarLenUnicode,
-};
-use tensor4all_hdf5_ffi::H5Type;
+use hdf5_rt::types::{FixedAscii, FixedUnicode, VarLenArray, VarLenAscii, VarLenUnicode};
+use hdf5_rt::H5Type;
 
 use half::f16;
 use ndarray::{ArrayD, SliceInfo, SliceInfoElem};

@@ -1,35 +1,51 @@
-# tensor4all-hdf5-ffi
+# hdf5-rt
 
-Thread-safe Rust bindings for the HDF5 library, forked from [hdf5-metno](https://github.com/metno/hdf5-rust) for the tensor4all project.
+Thread-safe Rust bindings for the HDF5 library with **runtime loading** (dlopen).
+
+Forked from [hdf5-metno](https://github.com/metno/hdf5-rust).
 
 ## Overview
 
-This is a simplified fork of hdf5-metno with:
-- Removed features: MPI, compression filters (blosc, lzf, zfp)
-- Removed derive macros (hdf5-derive)
-- Uses hdf5-metno-sys from crates.io for FFI bindings
-- Infrastructure for runtime library loading (dlopen) for Julia/Python bindings
+`hdf5-rt` loads the HDF5 library at runtime via dlopen, eliminating build-time dependencies on HDF5. This makes it ideal for:
+
+- **Julia/Python bindings** - Reuse the HDF5 library already loaded by HDF5.jl or h5py
+- **Portable binaries** - Ship without bundling HDF5
+- **Version flexibility** - Work with any compatible HDF5 version installed on the system
 
 ## Features
 
+- **Runtime loading** - No compile-time HDF5 dependency
+- **HDF5 1.10.5+ support** - Compatible with Ubuntu 22.04, HDF5.jl, h5py
+- **Thread-safe** - Safe concurrent access to HDF5
+
+Optional features:
 - `complex`: Complex number type support (Complex32, Complex64)
 - `f16`: Float16 type support
-- `runtime-loading`: Runtime library loading via dlopen (infrastructure only)
 
 ## Usage
 
 ```toml
 [dependencies]
-hdf5 = { git = "https://github.com/shinaoka/tensor4all-hdf5-ffi" }
+hdf5-rt = { git = "https://github.com/tensor4all/hdf5-rt" }
+```
+
+```rust
+use hdf5_rt::File;
+
+fn main() -> hdf5_rt::Result<()> {
+    let file = File::create("test.h5")?;
+    let group = file.create_group("data")?;
+    let dataset = group.new_dataset::<f64>()
+        .shape([100, 100])
+        .create("matrix")?;
+    Ok(())
+}
 ```
 
 ## Requirements
 
-- **HDF5 1.12.0 or later** - The library uses HDF5 1.12+ features
-
-## Building
-
-Requires HDF5 library (version 1.12.0+) installed on your system:
+- **HDF5 1.10.5 or later** installed on your system
+- Rust 1.80.0+
 
 ```bash
 # Ubuntu/Debian
@@ -38,6 +54,13 @@ sudo apt-get install libhdf5-dev
 # macOS
 brew install hdf5
 ```
+
+## Crates
+
+| Crate | Description |
+|-------|-------------|
+| `hdf5-rt` | Main HDF5 bindings with runtime loading |
+| `hdf5-rt-types` | Native Rust equivalents of HDF5 types |
 
 ## License
 
@@ -49,5 +72,4 @@ at your option.
 
 ## Acknowledgments
 
-Based on [hdf5-metno](https://github.com/metno/hdf5-rust) by Magnus Ulimoen and contributors.
-
+Based on [hdf5-metno](https://github.com/metno/hdf5-rust) by Ivan Smirnov, Magnus Ulimoen, and contributors.
