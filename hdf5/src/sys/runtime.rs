@@ -88,6 +88,25 @@ pub const H5O_INFO_TIME: c_uint = 0x0002;
 pub const H5O_INFO_NUM_ATTRS: c_uint = 0x0004;
 pub const H5O_INFO_ALL: c_uint = 0x000F;
 
+// Shared message flags
+pub const H5O_SHMESG_NONE_FLAG: c_uint = 0x0000;
+pub const H5O_SHMESG_SDSPACE_FLAG: c_uint = 0x0001;
+pub const H5O_SHMESG_DTYPE_FLAG: c_uint = 0x0002;
+pub const H5O_SHMESG_FILL_FLAG: c_uint = 0x0004;
+pub const H5O_SHMESG_PLINE_FLAG: c_uint = 0x0008;
+pub const H5O_SHMESG_ATTR_FLAG: c_uint = 0x0010;
+pub const H5O_SHMESG_ALL_FLAG: c_uint = 0x001F;
+
+// Object copy flags
+pub const H5O_COPY_SHALLOW_HIERARCHY_FLAG: c_uint = 0x0001;
+pub const H5O_COPY_EXPAND_SOFT_LINK_FLAG: c_uint = 0x0002;
+pub const H5O_COPY_EXPAND_EXT_LINK_FLAG: c_uint = 0x0004;
+pub const H5O_COPY_EXPAND_REFERENCE_FLAG: c_uint = 0x0008;
+pub const H5O_COPY_WITHOUT_ATTR_FLAG: c_uint = 0x0010;
+pub const H5O_COPY_PRESERVE_NULL_FLAG: c_uint = 0x0020;
+pub const H5O_COPY_MERGE_COMMITTED_DTYPE_FLAG: c_uint = 0x0040;
+pub const H5O_COPY_ALL: c_uint = 0x007F;
+
 // =============================================================================
 // Error constants
 // =============================================================================
@@ -212,6 +231,8 @@ pub enum H5S_seloper_t {
     H5S_SELECT_INVALID = 8,
 }
 
+pub const H5S_SELECT_SET: H5S_seloper_t = H5S_seloper_t::H5S_SELECT_SET;
+
 #[repr(C)]
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
 pub enum H5S_sel_type {
@@ -300,6 +321,34 @@ pub enum H5F_mem_t {
 }
 
 pub const H5FD_MEM_NTYPES: usize = 7;
+
+// H5FD log flags
+pub const H5FD_LOG_LOC_READ: c_uint = 0x0001;
+pub const H5FD_LOG_LOC_WRITE: c_uint = 0x0002;
+pub const H5FD_LOG_LOC_SEEK: c_uint = 0x0004;
+pub const H5FD_LOG_LOC_IO: c_uint = H5FD_LOG_LOC_READ | H5FD_LOG_LOC_WRITE | H5FD_LOG_LOC_SEEK;
+pub const H5FD_LOG_FILE_READ: c_uint = 0x0008;
+pub const H5FD_LOG_FILE_WRITE: c_uint = 0x0010;
+pub const H5FD_LOG_FILE_IO: c_uint = H5FD_LOG_FILE_READ | H5FD_LOG_FILE_WRITE;
+pub const H5FD_LOG_FLAVOR: c_uint = 0x0020;
+pub const H5FD_LOG_NUM_READ: c_uint = 0x0040;
+pub const H5FD_LOG_NUM_WRITE: c_uint = 0x0080;
+pub const H5FD_LOG_NUM_SEEK: c_uint = 0x0100;
+pub const H5FD_LOG_NUM_TRUNCATE: c_uint = 0x0200;
+pub const H5FD_LOG_NUM_IO: c_uint = H5FD_LOG_NUM_READ | H5FD_LOG_NUM_WRITE | H5FD_LOG_NUM_SEEK | H5FD_LOG_NUM_TRUNCATE;
+pub const H5FD_LOG_TIME_OPEN: c_uint = 0x0400;
+pub const H5FD_LOG_TIME_STAT: c_uint = 0x0800;
+pub const H5FD_LOG_TIME_READ: c_uint = 0x1000;
+pub const H5FD_LOG_TIME_WRITE: c_uint = 0x2000;
+pub const H5FD_LOG_TIME_SEEK: c_uint = 0x4000;
+pub const H5FD_LOG_TIME_TRUNCATE: c_uint = 0x8000;
+pub const H5FD_LOG_TIME_CLOSE: c_uint = 0x10000;
+pub const H5FD_LOG_TIME_IO: c_uint = H5FD_LOG_TIME_OPEN | H5FD_LOG_TIME_STAT | H5FD_LOG_TIME_READ | H5FD_LOG_TIME_WRITE | H5FD_LOG_TIME_SEEK | H5FD_LOG_TIME_TRUNCATE | H5FD_LOG_TIME_CLOSE;
+pub const H5FD_LOG_ALLOC: c_uint = 0x20000;
+pub const H5FD_LOG_FREE: c_uint = 0x40000;
+pub const H5FD_LOG_TRUNCATE: c_uint = H5FD_LOG_NUM_TRUNCATE | H5FD_LOG_TIME_TRUNCATE;
+pub const H5FD_LOG_META_IO: c_uint = H5FD_LOG_ALLOC | H5FD_LOG_FREE;
+pub const H5FD_LOG_ALL: c_uint = H5FD_LOG_LOC_IO | H5FD_LOG_FILE_IO | H5FD_LOG_FLAVOR | H5FD_LOG_NUM_IO | H5FD_LOG_TIME_IO | H5FD_LOG_META_IO;
 
 #[repr(C)]
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
@@ -502,6 +551,9 @@ pub struct H5E_error2_t {
     pub desc: *const c_char,
 }
 
+/// Legacy object reference type (v1.8-1.10)
+pub type hobj_ref_t = haddr_t;
+
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct H5R_ref_t {
@@ -540,6 +592,47 @@ pub struct H5Z_class2_t {
             *mut *mut c_void,
         ) -> size_t,
     >,
+}
+
+// H5AC cache config constants
+pub const H5AC__CURR_CACHE_CONFIG_VERSION: c_int = 1;
+pub const H5AC__MAX_TRACE_FILE_NAME_LEN: usize = 1024;
+pub const H5AC_METADATA_WRITE_STRATEGY__PROCESS_0_ONLY: c_int = 0;
+pub const H5AC_METADATA_WRITE_STRATEGY__DISTRIBUTED: c_int = 1;
+
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct H5AC_cache_config_t {
+    pub version: c_int,
+    pub rpt_fcn_enabled: hbool_t,
+    pub open_trace_file: hbool_t,
+    pub close_trace_file: hbool_t,
+    pub trace_file_name: [c_char; H5AC__MAX_TRACE_FILE_NAME_LEN + 1],
+    pub evictions_enabled: hbool_t,
+    pub set_initial_size: hbool_t,
+    pub initial_size: size_t,
+    pub min_clean_fraction: c_double,
+    pub max_size: size_t,
+    pub min_size: size_t,
+    pub epoch_length: c_long,
+    pub incr_mode: H5C_cache_incr_mode,
+    pub lower_hr_threshold: c_double,
+    pub increment: c_double,
+    pub apply_max_increment: hbool_t,
+    pub max_increment: size_t,
+    pub flash_incr_mode: H5C_cache_flash_incr_mode,
+    pub flash_multiple: c_double,
+    pub flash_threshold: c_double,
+    pub decr_mode: H5C_cache_decr_mode,
+    pub upper_hr_threshold: c_double,
+    pub decrement: c_double,
+    pub apply_max_decrement: hbool_t,
+    pub max_decrement: size_t,
+    pub epochs_before_eviction: c_int,
+    pub apply_empty_reserve: hbool_t,
+    pub empty_reserve: c_double,
+    pub dirty_bytes_threshold: size_t,
+    pub metadata_write_strategy: c_int,
 }
 
 #[repr(C)]
@@ -871,6 +964,11 @@ hdf5_function!(H5Sselect_none, fn(space_id: hid_t) -> herr_t);
 hdf5_function!(H5Sselect_valid, fn(space_id: hid_t) -> htri_t);
 hdf5_function!(H5Sget_select_npoints, fn(space_id: hid_t) -> hssize_t);
 hdf5_function!(H5Sget_select_type, fn(space_id: hid_t) -> H5S_sel_type);
+hdf5_function!(H5Sget_select_elem_npoints, fn(space_id: hid_t) -> hssize_t);
+hdf5_function!(
+    H5Sget_select_elem_pointlist,
+    fn(space_id: hid_t, startpoint: hsize_t, numpoints: hsize_t, buf: *mut hsize_t) -> herr_t
+);
 hdf5_function!(H5Sis_regular_hyperslab, fn(space_id: hid_t) -> htri_t);
 hdf5_function!(
     H5Sget_regular_hyperslab,
@@ -1336,6 +1434,116 @@ hdf5_function!(
     ) -> herr_t
 );
 
+// Additional H5P functions
+hdf5_function!(H5Pall_filters_avail, fn(plist_id: hid_t) -> htri_t);
+hdf5_function!(
+    H5Pget_alignment,
+    fn(fapl_id: hid_t, threshold: *mut hsize_t, alignment: *mut hsize_t) -> herr_t
+);
+hdf5_function!(
+    H5Pset_alignment,
+    fn(fapl_id: hid_t, threshold: hsize_t, alignment: hsize_t) -> herr_t
+);
+hdf5_function!(
+    H5Pget_attr_phase_change,
+    fn(plist_id: hid_t, max_compact: *mut c_uint, min_dense: *mut c_uint) -> herr_t
+);
+hdf5_function!(
+    H5Pset_attr_phase_change,
+    fn(plist_id: hid_t, max_compact: c_uint, min_dense: c_uint) -> herr_t
+);
+hdf5_function!(
+    H5Pget_cache,
+    fn(
+        fapl_id: hid_t,
+        mdc_nelmts: *mut c_int,
+        rdcc_nslots: *mut size_t,
+        rdcc_nbytes: *mut size_t,
+        rdcc_w0: *mut c_double,
+    ) -> herr_t
+);
+hdf5_function!(
+    H5Pset_cache,
+    fn(
+        fapl_id: hid_t,
+        mdc_nelmts: c_int,
+        rdcc_nslots: size_t,
+        rdcc_nbytes: size_t,
+        rdcc_w0: c_double,
+    ) -> herr_t
+);
+hdf5_function!(
+    H5Pget_external,
+    fn(
+        plist_id: hid_t,
+        idx: c_uint,
+        name_size: size_t,
+        name: *mut c_char,
+        offset: *mut i64,
+        size: *mut hsize_t,
+    ) -> herr_t
+);
+hdf5_function!(
+    H5Pset_external,
+    fn(plist_id: hid_t, name: *const c_char, offset: i64, size: hsize_t) -> herr_t
+);
+hdf5_function!(H5Pget_external_count, fn(plist_id: hid_t) -> c_int);
+hdf5_function!(H5Pget_gc_references, fn(fapl_id: hid_t, gc_ref: *mut c_uint) -> herr_t);
+hdf5_function!(H5Pset_gc_references, fn(fapl_id: hid_t, gc_ref: c_uint) -> herr_t);
+hdf5_function!(H5Pget_mdc_config, fn(fapl_id: hid_t, config_ptr: *mut H5AC_cache_config_t) -> herr_t);
+hdf5_function!(H5Pset_mdc_config, fn(fapl_id: hid_t, config_ptr: *const H5AC_cache_config_t) -> herr_t);
+hdf5_function!(H5Pget_meta_block_size, fn(fapl_id: hid_t, size: *mut hsize_t) -> herr_t);
+hdf5_function!(H5Pset_meta_block_size, fn(fapl_id: hid_t, size: hsize_t) -> herr_t);
+hdf5_function!(H5Pget_obj_track_times, fn(plist_id: hid_t, track_times: *mut hbool_t) -> herr_t);
+hdf5_function!(H5Pset_obj_track_times, fn(plist_id: hid_t, track_times: hbool_t) -> herr_t);
+hdf5_function!(H5Pget_sieve_buf_size, fn(fapl_id: hid_t, size: *mut size_t) -> herr_t);
+hdf5_function!(H5Pset_sieve_buf_size, fn(fapl_id: hid_t, size: size_t) -> herr_t);
+hdf5_function!(H5Pget_small_data_block_size, fn(fapl_id: hid_t, size: *mut hsize_t) -> herr_t);
+hdf5_function!(H5Pset_small_data_block_size, fn(fapl_id: hid_t, size: hsize_t) -> herr_t);
+hdf5_function!(
+    H5Pset_fapl_split,
+    fn(
+        fapl_id: hid_t,
+        meta_ext: *const c_char,
+        meta_plist_id: hid_t,
+        raw_ext: *const c_char,
+        raw_plist_id: hid_t,
+    ) -> herr_t
+);
+hdf5_function!(H5Pget_char_encoding, fn(plist_id: hid_t, encoding: *mut H5T_cset_t) -> herr_t);
+
+// Additional H5P functions for file creation
+hdf5_function!(H5Pget_istore_k, fn(plist_id: hid_t, ik: *mut c_uint) -> herr_t);
+hdf5_function!(H5Pset_istore_k, fn(plist_id: hid_t, ik: c_uint) -> herr_t);
+hdf5_function!(H5Pget_sym_k, fn(plist_id: hid_t, ik: *mut c_uint, lk: *mut c_uint) -> herr_t);
+hdf5_function!(H5Pset_sym_k, fn(plist_id: hid_t, ik: c_uint, lk: c_uint) -> herr_t);
+hdf5_function!(H5Pget_sizes, fn(plist_id: hid_t, sizeof_addr: *mut size_t, sizeof_size: *mut size_t) -> herr_t);
+hdf5_function!(
+    H5Pget_shared_mesg_nindexes,
+    fn(plist_id: hid_t, nindexes: *mut c_uint) -> herr_t
+);
+hdf5_function!(
+    H5Pset_shared_mesg_nindexes,
+    fn(plist_id: hid_t, nindexes: c_uint) -> herr_t
+);
+hdf5_function!(
+    H5Pget_shared_mesg_index,
+    fn(plist_id: hid_t, index_num: c_uint, mesg_type_flags: *mut c_uint, min_mesg_size: *mut c_uint) -> herr_t
+);
+hdf5_function!(
+    H5Pset_shared_mesg_index,
+    fn(plist_id: hid_t, index_num: c_uint, mesg_type_flags: c_uint, min_mesg_size: c_uint) -> herr_t
+);
+hdf5_function!(
+    H5Pget_shared_mesg_phase_change,
+    fn(plist_id: hid_t, max_list: *mut c_uint, min_btree: *mut c_uint) -> herr_t
+);
+hdf5_function!(
+    H5Pset_shared_mesg_phase_change,
+    fn(plist_id: hid_t, max_list: c_uint, min_btree: c_uint) -> herr_t
+);
+hdf5_function!(H5Pget_create_intermediate_group, fn(plist_id: hid_t, crt_intmd: *mut c_uint) -> herr_t);
+
 // H5R (Reference)
 hdf5_function!(
     H5Rcreate_object,
@@ -1349,6 +1557,20 @@ hdf5_function!(H5Rdestroy, fn(ref_ptr: *mut H5R_ref_t) -> herr_t);
 hdf5_function!(
     H5Rget_obj_type3,
     fn(ref_ptr: *mut H5R_ref_t, rapl_id: hid_t, obj_type: *mut H5O_type_t) -> herr_t
+);
+
+// Legacy H5R functions (v1.8-1.10)
+hdf5_function!(
+    H5Rcreate,
+    fn(ref_ptr: *mut c_void, loc_id: hid_t, name: *const c_char, ref_type: H5R_type_t, space_id: hid_t) -> herr_t
+);
+hdf5_function!(
+    H5Rdereference,
+    fn(obj_id: hid_t, oapl_id: hid_t, ref_type: H5R_type_t, ref_ptr: *const c_void) -> hid_t
+);
+hdf5_function!(
+    H5Rget_obj_type2,
+    fn(id: hid_t, ref_type: H5R_type_t, ref_ptr: *const c_void, obj_type: *mut H5O_type_t) -> herr_t
 );
 
 // H5E (Error)
