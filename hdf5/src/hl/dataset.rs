@@ -20,16 +20,16 @@ use crate::hl::plist::dataset_create::{
 };
 use crate::hl::plist::link_create::{CharEncoding, LinkCreate, LinkCreateBuilder};
 use crate::internal_prelude::*;
-use hdf5_sys::h5::HADDR_UNDEF;
-use hdf5_sys::h5d::{
+use crate::sys::h5::HADDR_UNDEF;
+use crate::sys::h5d::{
     H5Dcreate2, H5Dcreate_anon, H5Dget_access_plist, H5Dget_create_plist, H5Dget_offset,
     H5Dset_extent,
 };
 #[cfg(feature = "1.10.0")]
-use hdf5_sys::h5d::{H5Dflush, H5Drefresh};
-use hdf5_sys::h5l::H5Ldelete;
-use hdf5_sys::h5p::H5P_DEFAULT;
-use hdf5_sys::h5z::H5Z_filter_t;
+use crate::sys::h5d::{H5Dflush, H5Drefresh};
+use crate::sys::h5l::H5Ldelete;
+use crate::sys::h5p::H5P_DEFAULT;
+use crate::sys::h5z::H5Z_filter_t;
 use hdf5_types::{OwnedDynValue, TypeDescriptor};
 
 /// Default chunk size when filters are enabled and the chunk size is not specified.

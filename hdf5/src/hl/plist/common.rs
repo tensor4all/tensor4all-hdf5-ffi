@@ -1,4 +1,4 @@
-use hdf5_sys::h5p::{H5P_CRT_ORDER_INDEXED, H5P_CRT_ORDER_TRACKED};
+use crate::sys::h5p::{H5P_CRT_ORDER_INDEXED, H5P_CRT_ORDER_TRACKED};
 
 use bitflags::bitflags;
 

@@ -2,9 +2,9 @@ use std::fmt::{self, Debug};
 use std::ops::Deref;
 use std::ptr::addr_of_mut;
 
-use hdf5_sys::h5a::H5Aget_name;
-use hdf5_sys::h5p::H5Pcreate;
-use hdf5_sys::{
+use crate::sys::h5a::H5Aget_name;
+use crate::sys::h5p::H5Pcreate;
+use crate::sys::{
     h5::{H5_index_t, H5_iter_order_t},
     h5a::{H5A_info_t, H5A_operator2_t, H5Acreate2, H5Adelete, H5Aiterate2},
 };

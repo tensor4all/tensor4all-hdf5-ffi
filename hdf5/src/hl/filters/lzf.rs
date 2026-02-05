@@ -4,9 +4,11 @@ use std::sync::LazyLock;
 
 use lzf_sys::{lzf_compress, lzf_decompress, LZF_VERSION};
 
-use hdf5_sys::h5p::{H5Pget_chunk, H5Pget_filter_by_id2, H5Pmodify_filter};
-use hdf5_sys::h5t::H5Tget_size;
-use hdf5_sys::h5z::{H5Z_class2_t, H5Z_filter_t, H5Zregister, H5Z_CLASS_T_VERS, H5Z_FLAG_REVERSE};
+use crate::sys::h5p::{H5Pget_chunk, H5Pget_filter_by_id2, H5Pmodify_filter};
+use crate::sys::h5t::H5Tget_size;
+use crate::sys::h5z::{
+    H5Z_class2_t, H5Z_filter_t, H5Zregister, H5Z_CLASS_T_VERS, H5Z_FLAG_REVERSE,
+};
 
 use crate::error::H5ErrorCode;
 use crate::globals::{H5E_CALLBACK, H5E_PLIST};

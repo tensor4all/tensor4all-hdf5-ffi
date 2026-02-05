@@ -4,7 +4,7 @@ use std::fmt::{self, Debug, Display};
 use std::ops::Deref;
 use std::ptr::{addr_of, addr_of_mut};
 
-use hdf5_sys::h5t::{
+use crate::sys::h5t::{
     H5T_cdata_t, H5T_class_t, H5T_cset_t, H5T_order_t, H5T_sign_t, H5T_str_t, H5Tarray_create2,
     H5Tcompiler_conv, H5Tcopy, H5Tcreate, H5Tenum_create, H5Tenum_insert, H5Tequal, H5Tfind,
     H5Tget_array_dims2, H5Tget_array_ndims, H5Tget_class, H5Tget_cset, H5Tget_member_name,
@@ -361,7 +361,7 @@ impl Datatype {
 
         #[cfg(feature = "f16")]
         unsafe fn f16_type() -> Result<hid_t> {
-            use hdf5_sys::h5t::{H5Tset_ebias, H5Tset_fields};
+            use crate::sys::h5t::{H5Tset_ebias, H5Tset_fields};
             let f16_id = be_le!(H5T_IEEE_F32BE, H5T_IEEE_F32LE);
             h5try!(H5Tset_fields(f16_id, 15, 10, 5, 0, 10)); // cf. h5py/h5py#339
             h5try!(H5Tset_size(f16_id, 2));

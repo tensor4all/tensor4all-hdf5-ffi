@@ -3,12 +3,12 @@ use std::ptr::{self, addr_of_mut};
 
 #[cfg(feature = "zfp")]
 use crate::globals::{H5E_CALLBACK, H5E_PLIST};
-use hdf5_sys::h5p::{
+use crate::sys::h5p::{
     H5Pget_filter2, H5Pget_nfilters, H5Pset_deflate, H5Pset_filter, H5Pset_fletcher32, H5Pset_nbit,
     H5Pset_scaleoffset, H5Pset_shuffle, H5Pset_szip,
 };
-use hdf5_sys::h5t::H5T_class_t;
-use hdf5_sys::h5z::{
+use crate::sys::h5t::H5T_class_t;
+use crate::sys::h5z::{
     H5Zfilter_avail, H5Zget_filter_info, H5Z_FILTER_CONFIG_DECODE_ENABLED,
     H5Z_FILTER_CONFIG_ENCODE_ENABLED, H5Z_FILTER_DEFLATE, H5Z_FILTER_FLETCHER32, H5Z_FILTER_NBIT,
     H5Z_FILTER_SCALEOFFSET, H5Z_FILTER_SHUFFLE, H5Z_FILTER_SZIP, H5Z_FLAG_OPTIONAL,
@@ -17,7 +17,7 @@ use hdf5_sys::h5z::{
 };
 
 /// A filter identifier.
-pub use hdf5_sys::h5z::H5Z_filter_t;
+pub use crate::sys::h5z::H5Z_filter_t;
 
 use crate::internal_prelude::*;
 
@@ -843,7 +843,7 @@ pub(crate) fn validate_filters(filters: &[Filter], type_class: H5T_class_t) -> R
 
 #[cfg(test)]
 mod tests {
-    use hdf5_sys::h5t::H5T_class_t;
+    use crate::sys::h5t::H5T_class_t;
     use ndarray::{Array2, Axis};
     use std::io::{Seek, SeekFrom};
 

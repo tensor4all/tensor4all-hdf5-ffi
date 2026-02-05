@@ -80,7 +80,7 @@ impl_downcast!(as_plist, PropertyList);
 pub mod tests {
     use std::ops::Deref;
 
-    use hdf5_sys::{h5i::H5I_type_t, h5p::H5Pcreate};
+    use crate::sys::{h5i::H5I_type_t, h5p::H5Pcreate};
 
     use crate::globals::H5P_FILE_ACCESS;
     use crate::internal_prelude::*;

@@ -3,11 +3,11 @@ use std::ops::Deref;
 use std::ptr;
 
 #[cfg(not(feature = "1.12.0"))]
-use hdf5_sys::h5s::H5Sencode1;
+use crate::sys::h5s::H5Sencode1;
 #[cfg(feature = "1.12.0")]
-use hdf5_sys::h5s::H5Sencode2;
+use crate::sys::h5s::H5Sencode2;
 
-use hdf5_sys::h5s::{
+use crate::sys::h5s::{
     H5S_class_t, H5Scopy, H5Screate, H5Screate_simple, H5Sdecode, H5Sget_select_npoints,
     H5Sget_simple_extent_dims, H5Sget_simple_extent_ndims, H5Sget_simple_extent_npoints,
     H5Sget_simple_extent_type, H5Sselect_valid, H5S_UNLIMITED,
@@ -251,7 +251,7 @@ impl Dataspace {
 
 #[cfg(test)]
 mod tests {
-    use hdf5_sys::h5i::H5I_INVALID_HID;
+    use crate::sys::h5i::H5I_INVALID_HID;
 
     use super::Dataspace;
     use crate::internal_prelude::*;

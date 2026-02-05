@@ -8,13 +8,13 @@ Not implemented:
 use std::fmt::{self, Debug};
 use std::ops::Deref;
 
-use hdf5_sys::h5p::{H5Pcreate, H5Pget_chunk_cache, H5Pset_chunk_cache};
+use crate::sys::h5p::{H5Pcreate, H5Pget_chunk_cache, H5Pset_chunk_cache};
 #[cfg(all(feature = "1.10.0", feature = "have-parallel"))]
-use hdf5_sys::h5p::{H5Pget_all_coll_metadata_ops, H5Pset_all_coll_metadata_ops};
+use crate::sys::h5p::{H5Pget_all_coll_metadata_ops, H5Pset_all_coll_metadata_ops};
 #[cfg(feature = "1.8.17")]
-use hdf5_sys::h5p::{H5Pget_efile_prefix, H5Pset_efile_prefix};
+use crate::sys::h5p::{H5Pget_efile_prefix, H5Pset_efile_prefix};
 #[cfg(feature = "1.10.0")]
-use hdf5_sys::{
+use crate::sys::{
     h5d::H5D_vds_view_t,
     h5p::{
         H5Pget_virtual_printf_gap, H5Pget_virtual_view, H5Pset_virtual_printf_gap,

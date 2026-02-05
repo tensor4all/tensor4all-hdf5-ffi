@@ -3,7 +3,7 @@ use std::convert::identity;
 use std::fmt::{self, Debug, Display};
 use std::ops::{Deref, RangeFrom, RangeInclusive};
 
-use hdf5_sys::h5s::H5S_MAX_RANK;
+use crate::sys::h5s::H5S_MAX_RANK;
 
 pub type Ix = usize;
 

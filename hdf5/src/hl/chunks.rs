@@ -1,7 +1,7 @@
 use crate::internal_prelude::*;
 
 #[cfg(feature = "1.10.5")]
-use hdf5_sys::h5d::{H5Dget_chunk_info, H5Dget_num_chunks};
+use crate::sys::h5d::{H5Dget_chunk_info, H5Dget_num_chunks};
 
 #[cfg(feature = "1.10.5")]
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -70,7 +70,7 @@ pub(crate) fn get_num_chunks(ds: &Dataset) -> Option<usize> {
 #[cfg(feature = "1.14.0")]
 mod v1_14_0 {
     use super::*;
-    use hdf5_sys::h5d::H5Dchunk_iter;
+    use crate::sys::h5d::H5Dchunk_iter;
 
     /// Borrowed version of [`ChunkInfo`](crate::dataset::ChunkInfo)
     #[derive(Clone, Debug, PartialEq, Eq)]

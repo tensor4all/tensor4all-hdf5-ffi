@@ -7,9 +7,9 @@ use std::ptr::{self, addr_of_mut};
 #[cfg(feature = "1.10.0")]
 use bitflags::bitflags;
 
-use hdf5_sys::h5d::{H5D_alloc_time_t, H5D_fill_time_t, H5D_fill_value_t, H5D_layout_t};
-use hdf5_sys::h5f::H5F_UNLIMITED;
-use hdf5_sys::h5p::{
+use crate::sys::h5d::{H5D_alloc_time_t, H5D_fill_time_t, H5D_fill_value_t, H5D_layout_t};
+use crate::sys::h5f::H5F_UNLIMITED;
+use crate::sys::h5p::{
     H5Pall_filters_avail, H5Pcreate, H5Pfill_value_defined, H5Pget_alloc_time,
     H5Pget_attr_creation_order, H5Pget_attr_phase_change, H5Pget_chunk, H5Pget_external,
     H5Pget_external_count, H5Pget_fill_time, H5Pget_fill_value, H5Pget_layout,
@@ -17,10 +17,10 @@ use hdf5_sys::h5p::{
     H5Pset_attr_phase_change, H5Pset_chunk, H5Pset_external, H5Pset_fill_time, H5Pset_fill_value,
     H5Pset_layout, H5Pset_obj_track_times,
 };
-use hdf5_sys::h5t::H5Tget_class;
-use hdf5_sys::h5z::H5Z_filter_t;
+use crate::sys::h5t::H5Tget_class;
+use crate::sys::h5z::H5Z_filter_t;
 #[cfg(feature = "1.10.0")]
-use hdf5_sys::{
+use crate::sys::{
     h5d::H5D_CHUNK_DONT_FILTER_PARTIAL_CHUNKS,
     h5p::{
         H5Pget_chunk_opts, H5Pget_virtual_count, H5Pget_virtual_dsetname, H5Pget_virtual_filename,

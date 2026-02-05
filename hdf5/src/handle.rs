@@ -1,6 +1,6 @@
 use std::mem;
 
-use hdf5_sys::h5i::{H5I_type_t, H5Idec_ref, H5Iget_ref, H5Iget_type, H5Iinc_ref, H5Iis_valid};
+use crate::sys::h5i::{H5I_type_t, H5Idec_ref, H5Iget_ref, H5Iget_type, H5Iinc_ref, H5Iis_valid};
 
 use crate::internal_prelude::*;
 

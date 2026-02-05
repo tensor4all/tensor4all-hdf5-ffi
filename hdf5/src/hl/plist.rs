@@ -4,7 +4,7 @@ use std::panic;
 use std::ptr::{self, addr_of_mut};
 use std::str::FromStr;
 
-use hdf5_sys::h5p::{
+use crate::sys::h5p::{
     H5Pcopy, H5Pequal, H5Pexist, H5Pget_class, H5Pget_class_name, H5Pget_nprops, H5Pisa_class,
     H5Piterate, H5Pset_vlen_mem_manager,
 };
@@ -264,7 +264,7 @@ pub fn set_vlen_manager_libc(plist: hid_t) -> Result<()> {
 
 #[cfg(test)]
 pub mod tests {
-    use hdf5_sys::h5p::H5Pcreate;
+    use crate::sys::h5p::H5Pcreate;
 
     use crate::globals::{H5P_FILE_ACCESS, H5P_FILE_CREATE};
     use crate::internal_prelude::*;

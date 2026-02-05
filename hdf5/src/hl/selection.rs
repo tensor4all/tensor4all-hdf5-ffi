@@ -7,13 +7,13 @@ use std::slice;
 
 use ndarray::{self, s, Array1, Array2, ArrayView1, ArrayView2};
 
-use hdf5_sys::h5s::{
+use crate::sys::h5s::{
     H5S_sel_type, H5Sget_select_elem_npoints, H5Sget_select_elem_pointlist, H5Sget_select_type,
     H5Sget_simple_extent_ndims, H5Sselect_all, H5Sselect_elements, H5Sselect_hyperslab,
     H5Sselect_none, H5S_SELECT_SET, H5S_UNLIMITED,
 };
 #[cfg(feature = "1.10.0")]
-use hdf5_sys::h5s::{H5Sget_regular_hyperslab, H5Sis_regular_hyperslab};
+use crate::sys::h5s::{H5Sget_regular_hyperslab, H5Sis_regular_hyperslab};
 
 use crate::hl::extents::Ix;
 use crate::internal_prelude::*;
@@ -1593,7 +1593,7 @@ mod test {
     #[test]
     fn test_apply_extract_selection() -> Result<()> {
         use crate::sync::sync;
-        use hdf5_sys::h5s::{H5Sclose, H5Screate_simple};
+        use crate::sys::h5s::{H5Sclose, H5Screate_simple};
         use std::ptr;
 
         fn check<Sh>(

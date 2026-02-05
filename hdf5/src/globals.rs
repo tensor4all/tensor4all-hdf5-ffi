@@ -4,12 +4,12 @@ use std::mem;
 use std::sync::LazyLock;
 
 #[cfg(feature = "have-direct")]
-use hdf5_sys::h5p::H5Pset_fapl_direct;
-use hdf5_sys::h5p::{
+use crate::sys::h5p::H5Pset_fapl_direct;
+use crate::sys::h5p::{
     H5Pclose, H5Pcreate, H5Pget_driver, H5Pset_fapl_core, H5Pset_fapl_family, H5Pset_fapl_log,
     H5Pset_fapl_multi, H5Pset_fapl_sec2, H5Pset_fapl_stdio,
 };
-use hdf5_sys::{h5e, h5p, h5t};
+use crate::sys::{h5e, h5p, h5t};
 
 use crate::internal_prelude::*;
 
@@ -384,7 +384,7 @@ pub static H5FD_WINDOWS: LazyLock<hid_t> = LazyLock::new(|| *H5FD_SEC2);
 mod tests {
     use std::mem;
 
-    use hdf5_sys::{h5::haddr_t, h5i::H5I_INVALID_HID};
+    use crate::sys::{h5::haddr_t, h5i::H5I_INVALID_HID};
 
     use super::{
         H5E_DATASET, H5E_ERR_CLS, H5P_LST_LINK_ACCESS_ID, H5P_ROOT, H5R_DSET_REG_REF_BUF_SIZE,

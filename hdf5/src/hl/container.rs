@@ -6,9 +6,9 @@ use std::ops::Deref;
 
 use ndarray::{Array, Array1, Array2, ArrayD, ArrayView, ArrayView1};
 
-use hdf5_sys::h5a::{H5Aget_space, H5Aget_storage_size, H5Aget_type, H5Aread, H5Awrite};
-use hdf5_sys::h5d::{H5Dget_space, H5Dget_storage_size, H5Dget_type, H5Dread, H5Dwrite};
-use hdf5_sys::h5p::H5Pcreate;
+use crate::sys::h5a::{H5Aget_space, H5Aget_storage_size, H5Aget_type, H5Aread, H5Awrite};
+use crate::sys::h5d::{H5Dget_space, H5Dget_storage_size, H5Dget_type, H5Dread, H5Dwrite};
+use crate::sys::h5p::H5Pcreate;
 
 use crate::internal_prelude::*;
 

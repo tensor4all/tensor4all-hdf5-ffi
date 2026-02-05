@@ -2,11 +2,11 @@
 use std::fmt::{self, Debug};
 use std::ops::Deref;
 
-use hdf5_sys::h5o::{
+use crate::sys::h5o::{
     H5O_COPY_EXPAND_EXT_LINK_FLAG, H5O_COPY_EXPAND_SOFT_LINK_FLAG, H5O_COPY_SHALLOW_HIERARCHY_FLAG,
     H5O_COPY_WITHOUT_ATTR_FLAG,
 };
-use hdf5_sys::h5p::{H5Pcreate, H5Pget_copy_object, H5Pset_copy_object};
+use crate::sys::h5p::{H5Pcreate, H5Pget_copy_object, H5Pset_copy_object};
 
 use crate::globals::H5P_OBJECT_COPY;
 use crate::internal_prelude::*;

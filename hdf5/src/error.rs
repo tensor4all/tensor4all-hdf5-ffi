@@ -9,8 +9,8 @@ use std::ptr::{self, addr_of_mut};
 use ndarray::ShapeError;
 
 #[cfg(not(feature = "1.10.0"))]
-use hdf5_sys::h5::hssize_t;
-use hdf5_sys::h5e::{
+use crate::sys::h5::hssize_t;
+use crate::sys::h5e::{
     H5E_auto2_t, H5E_error2_t, H5Eget_current_stack, H5Eget_msg, H5Eprint2, H5Eset_auto2, H5Ewalk2,
     H5E_DEFAULT, H5E_WALK_DOWNWARD,
 };
@@ -342,7 +342,7 @@ impl H5ErrorCode for libc::ssize_t {
 
 #[cfg(test)]
 pub mod tests {
-    use hdf5_sys::h5p::{H5Pclose, H5Pcreate};
+    use crate::sys::h5p::{H5Pclose, H5Pcreate};
 
     use crate::globals::H5P_ROOT;
     use crate::internal_prelude::*;

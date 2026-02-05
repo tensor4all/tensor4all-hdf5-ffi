@@ -3,7 +3,7 @@ use std::ops::Deref;
 use std::panic;
 use std::ptr::addr_of_mut;
 
-use hdf5_sys::{
+use crate::sys::{
     h5::{hsize_t, H5_index_t, H5_iter_order_t},
     h5d::H5Dopen2,
     h5g::{H5G_info_t, H5Gcreate2, H5Gget_info, H5Gopen2},

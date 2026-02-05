@@ -1,7 +1,7 @@
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::LazyLock;
 
-pub(crate) use hdf5_sys::LOCK;
+pub(crate) use crate::sys::LOCK;
 
 thread_local! {
     pub static SILENCED: AtomicBool = AtomicBool::new(false);

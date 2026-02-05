@@ -335,7 +335,8 @@ pub const H5FD_LOG_NUM_READ: c_uint = 0x0040;
 pub const H5FD_LOG_NUM_WRITE: c_uint = 0x0080;
 pub const H5FD_LOG_NUM_SEEK: c_uint = 0x0100;
 pub const H5FD_LOG_NUM_TRUNCATE: c_uint = 0x0200;
-pub const H5FD_LOG_NUM_IO: c_uint = H5FD_LOG_NUM_READ | H5FD_LOG_NUM_WRITE | H5FD_LOG_NUM_SEEK | H5FD_LOG_NUM_TRUNCATE;
+pub const H5FD_LOG_NUM_IO: c_uint =
+    H5FD_LOG_NUM_READ | H5FD_LOG_NUM_WRITE | H5FD_LOG_NUM_SEEK | H5FD_LOG_NUM_TRUNCATE;
 pub const H5FD_LOG_TIME_OPEN: c_uint = 0x0400;
 pub const H5FD_LOG_TIME_STAT: c_uint = 0x0800;
 pub const H5FD_LOG_TIME_READ: c_uint = 0x1000;
@@ -343,12 +344,23 @@ pub const H5FD_LOG_TIME_WRITE: c_uint = 0x2000;
 pub const H5FD_LOG_TIME_SEEK: c_uint = 0x4000;
 pub const H5FD_LOG_TIME_TRUNCATE: c_uint = 0x8000;
 pub const H5FD_LOG_TIME_CLOSE: c_uint = 0x10000;
-pub const H5FD_LOG_TIME_IO: c_uint = H5FD_LOG_TIME_OPEN | H5FD_LOG_TIME_STAT | H5FD_LOG_TIME_READ | H5FD_LOG_TIME_WRITE | H5FD_LOG_TIME_SEEK | H5FD_LOG_TIME_TRUNCATE | H5FD_LOG_TIME_CLOSE;
+pub const H5FD_LOG_TIME_IO: c_uint = H5FD_LOG_TIME_OPEN
+    | H5FD_LOG_TIME_STAT
+    | H5FD_LOG_TIME_READ
+    | H5FD_LOG_TIME_WRITE
+    | H5FD_LOG_TIME_SEEK
+    | H5FD_LOG_TIME_TRUNCATE
+    | H5FD_LOG_TIME_CLOSE;
 pub const H5FD_LOG_ALLOC: c_uint = 0x20000;
 pub const H5FD_LOG_FREE: c_uint = 0x40000;
 pub const H5FD_LOG_TRUNCATE: c_uint = H5FD_LOG_NUM_TRUNCATE | H5FD_LOG_TIME_TRUNCATE;
 pub const H5FD_LOG_META_IO: c_uint = H5FD_LOG_ALLOC | H5FD_LOG_FREE;
-pub const H5FD_LOG_ALL: c_uint = H5FD_LOG_LOC_IO | H5FD_LOG_FILE_IO | H5FD_LOG_FLAVOR | H5FD_LOG_NUM_IO | H5FD_LOG_TIME_IO | H5FD_LOG_META_IO;
+pub const H5FD_LOG_ALL: c_uint = H5FD_LOG_LOC_IO
+    | H5FD_LOG_FILE_IO
+    | H5FD_LOG_FLAVOR
+    | H5FD_LOG_NUM_IO
+    | H5FD_LOG_TIME_IO
+    | H5FD_LOG_META_IO;
 
 #[repr(C)]
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
@@ -1490,8 +1502,14 @@ hdf5_function!(
 hdf5_function!(H5Pget_external_count, fn(plist_id: hid_t) -> c_int);
 hdf5_function!(H5Pget_gc_references, fn(fapl_id: hid_t, gc_ref: *mut c_uint) -> herr_t);
 hdf5_function!(H5Pset_gc_references, fn(fapl_id: hid_t, gc_ref: c_uint) -> herr_t);
-hdf5_function!(H5Pget_mdc_config, fn(fapl_id: hid_t, config_ptr: *mut H5AC_cache_config_t) -> herr_t);
-hdf5_function!(H5Pset_mdc_config, fn(fapl_id: hid_t, config_ptr: *const H5AC_cache_config_t) -> herr_t);
+hdf5_function!(
+    H5Pget_mdc_config,
+    fn(fapl_id: hid_t, config_ptr: *mut H5AC_cache_config_t) -> herr_t
+);
+hdf5_function!(
+    H5Pset_mdc_config,
+    fn(fapl_id: hid_t, config_ptr: *const H5AC_cache_config_t) -> herr_t
+);
 hdf5_function!(H5Pget_meta_block_size, fn(fapl_id: hid_t, size: *mut hsize_t) -> herr_t);
 hdf5_function!(H5Pset_meta_block_size, fn(fapl_id: hid_t, size: hsize_t) -> herr_t);
 hdf5_function!(H5Pget_obj_track_times, fn(plist_id: hid_t, track_times: *mut hbool_t) -> herr_t);
@@ -1517,22 +1535,29 @@ hdf5_function!(H5Pget_istore_k, fn(plist_id: hid_t, ik: *mut c_uint) -> herr_t);
 hdf5_function!(H5Pset_istore_k, fn(plist_id: hid_t, ik: c_uint) -> herr_t);
 hdf5_function!(H5Pget_sym_k, fn(plist_id: hid_t, ik: *mut c_uint, lk: *mut c_uint) -> herr_t);
 hdf5_function!(H5Pset_sym_k, fn(plist_id: hid_t, ik: c_uint, lk: c_uint) -> herr_t);
-hdf5_function!(H5Pget_sizes, fn(plist_id: hid_t, sizeof_addr: *mut size_t, sizeof_size: *mut size_t) -> herr_t);
 hdf5_function!(
-    H5Pget_shared_mesg_nindexes,
-    fn(plist_id: hid_t, nindexes: *mut c_uint) -> herr_t
+    H5Pget_sizes,
+    fn(plist_id: hid_t, sizeof_addr: *mut size_t, sizeof_size: *mut size_t) -> herr_t
 );
-hdf5_function!(
-    H5Pset_shared_mesg_nindexes,
-    fn(plist_id: hid_t, nindexes: c_uint) -> herr_t
-);
+hdf5_function!(H5Pget_shared_mesg_nindexes, fn(plist_id: hid_t, nindexes: *mut c_uint) -> herr_t);
+hdf5_function!(H5Pset_shared_mesg_nindexes, fn(plist_id: hid_t, nindexes: c_uint) -> herr_t);
 hdf5_function!(
     H5Pget_shared_mesg_index,
-    fn(plist_id: hid_t, index_num: c_uint, mesg_type_flags: *mut c_uint, min_mesg_size: *mut c_uint) -> herr_t
+    fn(
+        plist_id: hid_t,
+        index_num: c_uint,
+        mesg_type_flags: *mut c_uint,
+        min_mesg_size: *mut c_uint,
+    ) -> herr_t
 );
 hdf5_function!(
     H5Pset_shared_mesg_index,
-    fn(plist_id: hid_t, index_num: c_uint, mesg_type_flags: c_uint, min_mesg_size: c_uint) -> herr_t
+    fn(
+        plist_id: hid_t,
+        index_num: c_uint,
+        mesg_type_flags: c_uint,
+        min_mesg_size: c_uint,
+    ) -> herr_t
 );
 hdf5_function!(
     H5Pget_shared_mesg_phase_change,
@@ -1542,7 +1567,10 @@ hdf5_function!(
     H5Pset_shared_mesg_phase_change,
     fn(plist_id: hid_t, max_list: c_uint, min_btree: c_uint) -> herr_t
 );
-hdf5_function!(H5Pget_create_intermediate_group, fn(plist_id: hid_t, crt_intmd: *mut c_uint) -> herr_t);
+hdf5_function!(
+    H5Pget_create_intermediate_group,
+    fn(plist_id: hid_t, crt_intmd: *mut c_uint) -> herr_t
+);
 
 // H5R (Reference)
 hdf5_function!(
@@ -1562,7 +1590,13 @@ hdf5_function!(
 // Legacy H5R functions (v1.8-1.10)
 hdf5_function!(
     H5Rcreate,
-    fn(ref_ptr: *mut c_void, loc_id: hid_t, name: *const c_char, ref_type: H5R_type_t, space_id: hid_t) -> herr_t
+    fn(
+        ref_ptr: *mut c_void,
+        loc_id: hid_t,
+        name: *const c_char,
+        ref_type: H5R_type_t,
+        space_id: hid_t,
+    ) -> herr_t
 );
 hdf5_function!(
     H5Rdereference,
@@ -1570,7 +1604,12 @@ hdf5_function!(
 );
 hdf5_function!(
     H5Rget_obj_type2,
-    fn(id: hid_t, ref_type: H5R_type_t, ref_ptr: *const c_void, obj_type: *mut H5O_type_t) -> herr_t
+    fn(
+        id: hid_t,
+        ref_type: H5R_type_t,
+        ref_ptr: *const c_void,
+        obj_type: *mut H5O_type_t,
+    ) -> herr_t
 );
 
 // H5E (Error)

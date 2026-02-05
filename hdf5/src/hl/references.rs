@@ -6,8 +6,8 @@ mod legacy;
 #[cfg(feature = "1.12.1")]
 mod standard;
 
-use hdf5_sys::h5o::H5O_type_t;
-use hdf5_sys::h5r::H5R_type_t;
+use crate::sys::h5o::H5O_type_t;
+use crate::sys::h5r::H5R_type_t;
 
 pub use legacy::ObjectReference1;
 #[cfg(feature = "1.12.1")]
@@ -46,7 +46,7 @@ pub enum ReferencedObject {
 
 impl ReferencedObject {
     pub fn from_type_and_id(object_type: H5O_type_t, object_id: hid_t) -> Result<Self> {
-        use hdf5_sys::h5o::H5O_type_t::*;
+        use crate::sys::h5o::H5O_type_t::*;
         let referenced_object = match object_type {
             H5O_TYPE_GROUP => ReferencedObject::Group(Group::from_id(object_id)?),
             H5O_TYPE_DATASET => ReferencedObject::Dataset(Dataset::from_id(object_id)?),

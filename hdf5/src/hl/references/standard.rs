@@ -2,9 +2,9 @@
 //!
 //! These are gated on v1.12.1 since there appear to be multiple bugs in v1.12.0.
 //!
-use hdf5_sys::h5o::H5O_type_t;
-use hdf5_sys::h5r::H5R_type_t::H5R_OBJECT2;
-use hdf5_sys::h5r::{H5R_ref_t, H5Rcreate_object, H5Rdestroy, H5Rget_obj_type3, H5Ropen_object};
+use crate::sys::h5o::H5O_type_t;
+use crate::sys::h5r::H5R_type_t::H5R_OBJECT2;
+use crate::sys::h5r::{H5R_ref_t, H5Rcreate_object, H5Rdestroy, H5Rget_obj_type3, H5Ropen_object};
 
 use super::{private::ObjectReferencePrivate, ObjectReference};
 use crate::internal_prelude::*;
