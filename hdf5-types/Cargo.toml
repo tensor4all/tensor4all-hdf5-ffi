@@ -3,6 +3,7 @@ name = "tensor4all-hdf5-types"
 description = "Native Rust equivalents of HDF5 types - fork for tensor4all"
 readme = "README.md"
 build = "build.rs"
+links = "hdf5_types"
 categories = ["encoding"]
 version = "0.1.0"
 rust-version.workspace = true
