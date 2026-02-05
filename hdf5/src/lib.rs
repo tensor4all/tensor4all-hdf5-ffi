@@ -140,6 +140,10 @@ mod export {
 
 pub use crate::export::*;
 
+// Low-level FFI abstraction layer (for future runtime-loading support)
+#[doc(hidden)]
+pub mod sys;
+
 #[macro_use]
 mod macros;
 #[macro_use]
