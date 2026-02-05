@@ -234,7 +234,9 @@ impl DatasetBuilder {
     }
 
     pub fn with_data_as<'d, A, T, D>(
-        self, data: A, type_desc: &TypeDescriptor,
+        self,
+        data: A,
+        type_desc: &TypeDescriptor,
     ) -> DatasetBuilderData<'d, T, D>
     where
         A: Into<ArrayView<'d, T, D>>,
@@ -542,7 +544,10 @@ impl DatasetBuilderInner {
     }
 
     unsafe fn create(
-        &self, desc: &TypeDescriptor, name: Option<&str>, extents: &Extents,
+        &self,
+        desc: &TypeDescriptor,
+        name: Option<&str>,
+        extents: &Extents,
     ) -> Result<Dataset> {
         // construct in-file type descriptor; convert to packed representation if needed
         let desc = if self.packed { desc.to_packed_repr() } else { desc.to_c_repr() };
@@ -829,8 +834,13 @@ impl DatasetBuilderInner {
 
     #[cfg(feature = "1.10.0")]
     pub fn virtual_map<F, D, E1, S1, E2, S2>(
-        &mut self, src_filename: F, src_dataset: D, src_extents: E1, src_selection: S1,
-        vds_extents: E2, vds_selection: S2,
+        &mut self,
+        src_filename: F,
+        src_dataset: D,
+        src_extents: E1,
+        src_selection: S1,
+        vds_extents: E2,
+        vds_selection: S2,
     ) where
         F: AsRef<str>,
         D: AsRef<str>,

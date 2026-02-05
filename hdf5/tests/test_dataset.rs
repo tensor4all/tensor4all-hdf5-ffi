@@ -14,7 +14,11 @@ use self::common::gen::{gen_arr, gen_slice, Gen};
 use self::common::util::new_in_memory_file;
 
 fn test_write_slice<T, R>(
-    rng: &mut R, ds: &hdf5::Dataset, arr: &ArrayD<T>, default_value: &T, _ndim: usize,
+    rng: &mut R,
+    ds: &hdf5::Dataset,
+    arr: &ArrayD<T>,
+    default_value: &T,
+    _ndim: usize,
 ) -> hdf5::Result<()>
 where
     T: hdf5::H5Type + fmt::Debug + PartialEq + Gen + Clone,
@@ -43,7 +47,10 @@ where
 }
 
 fn test_read_slice<T, R>(
-    rng: &mut R, ds: &hdf5::Dataset, arr: &ArrayD<T>, ndim: usize,
+    rng: &mut R,
+    ds: &hdf5::Dataset,
+    arr: &ArrayD<T>,
+    ndim: usize,
 ) -> hdf5::Result<()>
 where
     T: hdf5::H5Type + fmt::Debug + PartialEq + Gen,

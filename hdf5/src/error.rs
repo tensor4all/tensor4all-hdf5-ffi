@@ -70,7 +70,9 @@ impl ErrorStack {
             err: Option<Error>,
         }
         unsafe extern "C" fn callback(
-            _: c_uint, err_desc: *const H5E_error2_t, data: *mut c_void,
+            _: c_uint,
+            err_desc: *const H5E_error2_t,
+            data: *mut c_void,
         ) -> herr_t {
             panic::catch_unwind(|| unsafe {
                 let data = &mut *(data.cast::<CallbackData>());

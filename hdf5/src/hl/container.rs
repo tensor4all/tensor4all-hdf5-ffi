@@ -40,7 +40,10 @@ impl<'a> Reader<'a> {
     }
 
     fn read_into_buf<T: H5Type>(
-        &self, buf: *mut T, fspace: Option<&Dataspace>, mspace: Option<&Dataspace>,
+        &self,
+        buf: *mut T,
+        fspace: Option<&Dataspace>,
+        mspace: Option<&Dataspace>,
     ) -> Result<()> {
         let file_dtype = self.obj.dtype()?;
         let mem_dtype = Datatype::from_type::<T>()?;
@@ -217,7 +220,10 @@ impl<'a> Writer<'a> {
     }
 
     fn write_from_buf<T: H5Type>(
-        &self, buf: *const T, fspace: Option<&Dataspace>, mspace: Option<&Dataspace>,
+        &self,
+        buf: *const T,
+        fspace: Option<&Dataspace>,
+        mspace: Option<&Dataspace>,
     ) -> Result<()> {
         let file_dtype = self.obj.dtype()?;
         let mem_dtype = Datatype::from_type::<T>()?;

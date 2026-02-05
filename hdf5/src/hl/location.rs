@@ -202,7 +202,10 @@ impl Location {
     /// * `ocpypl` - Optional object copy property list (controls copy behavior)
     /// * `lcpl` - Optional link creation property list (controls link properties)
     pub fn copy_to_with_props(
-        &self, dst_loc: &Location, dst_name: &str, ocpypl: Option<&PropertyList>,
+        &self,
+        dst_loc: &Location,
+        dst_name: &str,
+        ocpypl: Option<&PropertyList>,
         lcpl: Option<&PropertyList>,
     ) -> Result<()> {
         // Validate property list classes if provided

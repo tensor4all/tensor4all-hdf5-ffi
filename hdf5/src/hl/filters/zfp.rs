@@ -485,8 +485,12 @@ pub unsafe fn parse_zfp_cdata(cd_nelmts: usize, cd_values: *const c_uint) -> Opt
 /// - `size_t`: The size of the processed data (compressed or decompressed) on success,
 ///   or 0 on failure.
 unsafe extern "C" fn filter_zfp(
-    flags: c_uint, cd_nelmts: size_t, cd_values: *const c_uint, nbytes: size_t,
-    buf_size: *mut size_t, buf: *mut *mut c_void,
+    flags: c_uint,
+    cd_nelmts: size_t,
+    cd_values: *const c_uint,
+    nbytes: size_t,
+    buf_size: *mut size_t,
+    buf: *mut *mut c_void,
 ) -> size_t {
     let cfg = if let Some(cfg) = parse_zfp_cdata(cd_nelmts, cd_values) {
         cfg
@@ -502,7 +506,9 @@ unsafe extern "C" fn filter_zfp(
 }
 
 unsafe fn filter_zfp_compress(
-    cfg: &ZfpConfig, buf_size: *mut size_t, buf: *mut *mut c_void,
+    cfg: &ZfpConfig,
+    buf_size: *mut size_t,
+    buf: *mut *mut c_void,
 ) -> size_t {
     let zfp_stream = zfp_stream_open(ptr::null_mut());
     if zfp_stream.is_null() {
@@ -607,7 +613,10 @@ unsafe fn filter_zfp_compress(
 }
 
 unsafe fn filter_zfp_decompress(
-    cfg: &ZfpConfig, nbytes: size_t, buf_size: *mut size_t, buf: *mut *mut c_void,
+    cfg: &ZfpConfig,
+    nbytes: size_t,
+    buf_size: *mut size_t,
+    buf: *mut *mut c_void,
 ) -> size_t {
     let zfp_stream = zfp_stream_open(ptr::null_mut());
     if zfp_stream.is_null() {

@@ -92,8 +92,12 @@ extern "C" fn set_local_lzf(dcpl_id: hid_t, type_id: hid_t, _space_id: hid_t) ->
 }
 
 unsafe extern "C" fn filter_lzf(
-    flags: c_uint, cd_nelmts: size_t, cd_values: *const c_uint, nbytes: size_t,
-    buf_size: *mut size_t, buf: *mut *mut c_void,
+    flags: c_uint,
+    cd_nelmts: size_t,
+    cd_values: *const c_uint,
+    nbytes: size_t,
+    buf_size: *mut size_t,
+    buf: *mut *mut c_void,
 ) -> size_t {
     if flags & H5Z_FLAG_REVERSE == 0 {
         unsafe { filter_lzf_compress(nbytes, buf_size, buf) }
@@ -103,7 +107,9 @@ unsafe extern "C" fn filter_lzf(
 }
 
 unsafe fn filter_lzf_compress(
-    nbytes: size_t, buf_size: *mut size_t, buf: *mut *mut c_void,
+    nbytes: size_t,
+    buf_size: *mut size_t,
+    buf: *mut *mut c_void,
 ) -> size_t {
     let outbuf_size = *buf_size;
     let outbuf = libc::malloc(outbuf_size);
@@ -122,7 +128,10 @@ unsafe fn filter_lzf_compress(
 }
 
 unsafe fn filter_lzf_decompress(
-    cd_nelmts: size_t, cd_values: *const c_uint, nbytes: size_t, buf_size: *mut size_t,
+    cd_nelmts: size_t,
+    cd_values: *const c_uint,
+    nbytes: size_t,
+    buf_size: *mut size_t,
     buf: *mut *mut c_void,
 ) -> size_t {
     let cdata = slice::from_raw_parts(cd_values, cd_nelmts as _);

@@ -23,7 +23,8 @@ pub fn gen_ascii<R: Rng + ?Sized>(rng: &mut R, len: usize) -> String {
 
 /// Generate a random slice of elements inside the given `shape` dimension.
 pub fn gen_slice<R: Rng + ?Sized>(
-    rng: &mut R, shape: &[usize],
+    rng: &mut R,
+    shape: &[usize],
 ) -> SliceInfo<Vec<SliceInfoElem>, ndarray::IxDyn, ndarray::IxDyn> {
     let rand_slice: Vec<SliceInfoElem> =
         shape.into_iter().map(|s| gen_slice_one_dim(rng, *s)).collect();

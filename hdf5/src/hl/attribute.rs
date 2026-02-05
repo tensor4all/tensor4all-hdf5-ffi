@@ -60,7 +60,10 @@ impl Attribute {
     /// Returns names of all the members in the group, non-recursively.
     pub fn attr_names(obj: &Location) -> Result<Vec<String>> {
         unsafe extern "C" fn attributes_callback(
-            _id: hid_t, attr_name: *const c_char, _info: *const H5A_info_t, op_data: *mut c_void,
+            _id: hid_t,
+            attr_name: *const c_char,
+            _info: *const H5A_info_t,
+            op_data: *mut c_void,
         ) -> herr_t {
             std::panic::catch_unwind(|| {
                 let other_data: &mut Vec<String> =
@@ -124,7 +127,9 @@ impl AttributeBuilder {
 
     /// Sets the data to store in the attribute and sets its element type with a type descriptor.
     pub fn with_data_as<'d, A, T, D>(
-        self, data: A, type_desc: &TypeDescriptor,
+        self,
+        data: A,
+        type_desc: &TypeDescriptor,
     ) -> AttributeBuilderData<'d, T, D>
     where
         A: Into<ArrayView<'d, T, D>>,
@@ -273,7 +278,10 @@ impl AttributeBuilderInner {
     }
 
     unsafe fn create(
-        &self, desc: &TypeDescriptor, name: &str, extents: &Extents,
+        &self,
+        desc: &TypeDescriptor,
+        name: &str,
+        extents: &Extents,
     ) -> Result<Attribute> {
         // construct in-file type descriptor; convert to packed representation if needed
         let desc = if self.packed { desc.to_packed_repr() } else { desc.to_c_repr() };

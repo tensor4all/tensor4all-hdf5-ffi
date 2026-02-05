@@ -308,7 +308,11 @@ pub struct VirtualMapping {
 impl VirtualMapping {
     /// Constructs a `VirtualMapping` with the given parameters.
     pub fn new<F, D, E1, S1, E2, S2>(
-        src_filename: F, src_dataset: D, src_extents: E1, src_selection: S1, vds_extents: E2,
+        src_filename: F,
+        src_dataset: D,
+        src_extents: E1,
+        src_selection: S1,
+        vds_extents: E2,
         vds_selection: S2,
     ) -> Self
     where
@@ -524,7 +528,10 @@ impl DatasetCreateBuilder {
 
     #[cfg(feature = "zfp")]
     pub fn zfp_accuracy(
-        &mut self, accuracy: f64, chunk_dims: Vec<usize>, n_bytes: u8,
+        &mut self,
+        accuracy: f64,
+        chunk_dims: Vec<usize>,
+        n_bytes: u8,
     ) -> &mut Self {
         self.filters.push(Filter::zfp_accuracy(accuracy, chunk_dims, n_bytes));
         self
@@ -538,7 +545,10 @@ impl DatasetCreateBuilder {
 
     #[cfg(feature = "zfp")]
     pub fn zfp_precision(
-        &mut self, precision: u8, chunk_dims: Vec<usize>, n_bytes: u8,
+        &mut self,
+        precision: u8,
+        chunk_dims: Vec<usize>,
+        n_bytes: u8,
     ) -> &mut Self {
         self.filters.push(Filter::zfp_precision(precision, chunk_dims, n_bytes));
         self
@@ -630,8 +640,13 @@ impl DatasetCreateBuilder {
     /// Adds a mapping between virtual and source datasets.
     #[cfg(feature = "1.10.0")]
     pub fn virtual_map<F, D, E1, S1, E2, S2>(
-        &mut self, src_filename: F, src_dataset: D, src_extents: E1, src_selection: S1,
-        vds_extents: E2, vds_selection: S2,
+        &mut self,
+        src_filename: F,
+        src_dataset: D,
+        src_extents: E1,
+        src_selection: S1,
+        vds_extents: E2,
+        vds_selection: S2,
     ) -> &mut Self
     where
         F: AsRef<str>,

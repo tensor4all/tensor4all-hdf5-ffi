@@ -1371,7 +1371,11 @@ mod test {
     fn test_hyperslab_into_from_raw() -> Result<()> {
         use std::convert::TryInto;
         fn check<S, H, RH, RS, H2, S2>(
-            shape: S, hyper: H, exp_raw_hyper: RH, exp_raw_sel: Option<RS>, exp_hyper2: H2,
+            shape: S,
+            hyper: H,
+            exp_raw_hyper: RH,
+            exp_raw_sel: Option<RS>,
+            exp_hyper2: H2,
             exp_sel2: Option<S2>,
         ) where
             S: AsRef<[Ix]>,
@@ -1475,7 +1479,10 @@ mod test {
     fn test_in_out_shape_ndim() -> Result<()> {
         use std::convert::TryInto;
         fn check<S: TryInto<Selection>, E: AsRef<[Ix]>>(
-            sel: S, exp_in_ndim: Option<usize>, exp_out_shape: E, exp_out_ndim: Option<usize>,
+            sel: S,
+            exp_in_ndim: Option<usize>,
+            exp_out_shape: E,
+            exp_out_ndim: Option<usize>,
         ) -> Result<()>
         where
             S::Error: std::fmt::Debug,
@@ -1528,7 +1535,10 @@ mod test {
     fn test_selection_into_from_raw() -> Result<()> {
         use std::convert::TryInto;
         fn check<Sh, S, RS, S2>(
-            shape: Sh, sel: S, exp_raw_sel: RS, exp_sel2: Option<S2>,
+            shape: Sh,
+            sel: S,
+            exp_raw_sel: RS,
+            exp_sel2: Option<S2>,
         ) -> Result<()>
         where
             Sh: AsRef<[Ix]>,
@@ -1587,7 +1597,9 @@ mod test {
         use std::ptr;
 
         fn check<Sh>(
-            shape: Sh, raw_sel: RawSelection, exp_raw_sel2: Option<RawSelection>,
+            shape: Sh,
+            raw_sel: RawSelection,
+            exp_raw_sel2: Option<RawSelection>,
         ) -> Result<()>
         where
             Sh: AsRef<[Ix]>,

@@ -151,7 +151,10 @@ impl Group {
     /// For a detailed explanation on how `target_file_name` is resolved, see
     /// [https://portal.hdfgroup.org/display/HDF5/H5L_CREATE_EXTERNAL](https://portal.hdfgroup.org/display/HDF5/H5L_CREATE_EXTERNAL)
     pub fn link_external(
-        &self, target_file_name: &str, target: &str, link_name: &str,
+        &self,
+        target_file_name: &str,
+        target: &str,
+        link_name: &str,
     ) -> Result<()> {
         // TODO: &mut self?
         let target = to_cstring(target)?;
@@ -303,7 +306,10 @@ impl From<&H5L_info_t> for LinkInfo {
 impl Group {
     /// Visits all objects in the group
     pub fn iter_visit<F, G>(
-        &self, iteration_order: IterationOrder, traversal_order: TraversalOrder, mut val: G,
+        &self,
+        iteration_order: IterationOrder,
+        traversal_order: TraversalOrder,
+        mut val: G,
         mut op: F,
     ) -> Result<G>
     where
@@ -318,7 +324,10 @@ impl Group {
         //
         // This function will be called multiple times, but never concurrently
         unsafe extern "C" fn callback<F, G>(
-            id: hid_t, name: *const c_char, info: *const H5L_info_t, op_data: *mut c_void,
+            id: hid_t,
+            name: *const c_char,
+            info: *const H5L_info_t,
+            op_data: *mut c_void,
         ) -> herr_t
         where
             F: FnMut(&Group, &str, LinkInfo, &mut G) -> bool,

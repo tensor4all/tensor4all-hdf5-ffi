@@ -186,8 +186,12 @@ fn parse_blosc_cdata(cd_nelmts: size_t, cd_values: *const c_uint) -> Option<Blos
 }
 
 unsafe extern "C" fn filter_blosc(
-    flags: c_uint, cd_nelmts: size_t, cd_values: *const c_uint, nbytes: size_t,
-    buf_size: *mut size_t, buf: *mut *mut c_void,
+    flags: c_uint,
+    cd_nelmts: size_t,
+    cd_values: *const c_uint,
+    nbytes: size_t,
+    buf_size: *mut size_t,
+    buf: *mut *mut c_void,
 ) -> size_t {
     let cfg = if let Some(cfg) = parse_blosc_cdata(cd_nelmts, cd_values) {
         cfg
@@ -202,7 +206,10 @@ unsafe extern "C" fn filter_blosc(
 }
 
 unsafe fn filter_blosc_compress(
-    cfg: &BloscConfig, nbytes: size_t, buf_size: *mut size_t, buf: *mut *mut c_void,
+    cfg: &BloscConfig,
+    nbytes: size_t,
+    buf_size: *mut size_t,
+    buf: *mut *mut c_void,
 ) -> size_t {
     let outbuf_size = *buf_size;
     let outbuf = libc::malloc(outbuf_size);
@@ -224,7 +231,9 @@ unsafe fn filter_blosc_compress(
 }
 
 unsafe fn filter_blosc_decompress(
-    cfg: &BloscConfig, buf_size: *mut size_t, buf: *mut *mut c_void,
+    cfg: &BloscConfig,
+    buf_size: *mut size_t,
+    buf: *mut *mut c_void,
 ) -> size_t {
     let mut outbuf_size: size_t = cfg.outbuf_size;
     let (mut cbytes, mut blocksize): (size_t, size_t) = (0, 0);

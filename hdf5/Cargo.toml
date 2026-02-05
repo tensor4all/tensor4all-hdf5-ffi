@@ -53,3 +53,10 @@ tempfile = "3.9"
 
 [package.metadata.docs.rs]
 features = ["f16", "complex"]
+
+[lints.rust]
+# Allow cfg checks for features that were removed but still have dead code paths
+# These features (mpio, blosc, lzf, zfp) are disabled and their code is gated
+unexpected_cfgs = { level = "warn", check-cfg = [
+    'cfg(feature, values("mpio", "have-parallel", "blosc", "blosc-lz4", "blosc-snappy", "blosc-zlib", "blosc-zstd", "blosc-all", "lzf", "zfp"))'
+] }

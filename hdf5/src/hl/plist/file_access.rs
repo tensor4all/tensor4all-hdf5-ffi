@@ -1235,7 +1235,10 @@ impl FileAccessBuilder {
     /// Sets the page buffer size properties.
     #[cfg(feature = "1.10.1")]
     pub fn page_buffer_size(
-        &mut self, buf_size: usize, min_meta_perc: u32, min_raw_perc: u32,
+        &mut self,
+        buf_size: usize,
+        min_meta_perc: u32,
+        min_raw_perc: u32,
     ) -> &mut Self {
         self.page_buffer_size = Some(PageBufferSize { buf_size, min_meta_perc, min_raw_perc });
         self
@@ -1282,7 +1285,10 @@ impl FileAccessBuilder {
     /// Sets metadata cache logging options.
     #[cfg(feature = "1.10.0")]
     pub fn mdc_log_options(
-        &mut self, is_enabled: bool, location: &str, start_on_access: bool,
+        &mut self,
+        is_enabled: bool,
+        location: &str,
+        start_on_access: bool,
     ) -> &mut Self {
         self.mdc_log_options =
             Some(CacheLogOptions { is_enabled, location: location.into(), start_on_access });
@@ -1364,7 +1370,10 @@ impl FileAccessBuilder {
 
     /// Sets the file driver to SEC2 with logging and configures it.
     pub fn log_options(
-        &mut self, logfile: Option<&str>, flags: LogFlags, buf_size: usize,
+        &mut self,
+        logfile: Option<&str>,
+        flags: LogFlags,
+        buf_size: usize,
     ) -> &mut Self {
         self.log_options.logfile = logfile.map(Into::into);
         self.log_options.flags = flags;
@@ -1413,7 +1422,10 @@ impl FileAccessBuilder {
 
     /// Sets the file driver to Multi and configures it.
     pub fn multi_options(
-        &mut self, files: &[MultiFile], layout: &MultiLayout, relax: bool,
+        &mut self,
+        files: &[MultiFile],
+        layout: &MultiLayout,
+        relax: bool,
     ) -> &mut Self {
         self.driver(&FileDriver::Multi(MultiDriver {
             files: files.to_vec(),
@@ -1450,7 +1462,10 @@ impl FileAccessBuilder {
     /// Sets the file driver to Direct and configures it.
     #[cfg(feature = "have-direct")]
     pub fn direct_options(
-        &mut self, alignment: usize, block_size: usize, cbuf_size: usize,
+        &mut self,
+        alignment: usize,
+        block_size: usize,
+        cbuf_size: usize,
     ) -> &mut Self {
         self.driver(&FileDriver::Direct(DirectDriver { alignment, block_size, cbuf_size }))
     }

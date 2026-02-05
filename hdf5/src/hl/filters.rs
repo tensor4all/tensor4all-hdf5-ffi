@@ -623,7 +623,10 @@ impl Filter {
 
     #[cfg(feature = "blosc")]
     unsafe fn apply_blosc(
-        plist_id: hid_t, complib: Blosc, clevel: u8, shuffle: BloscShuffle,
+        plist_id: hid_t,
+        complib: Blosc,
+        clevel: u8,
+        shuffle: BloscShuffle,
     ) -> herr_t {
         let mut cdata: Vec<c_uint> = vec![0; 7];
         cdata[4] = c_uint::from(clevel);
@@ -668,7 +671,10 @@ impl Filter {
     /// # Returns
     /// - `herr_t`: Returns 0 on success, or a negative value on failure.
     unsafe fn apply_zfp(
-        plist_id: hid_t, n_bytes: u8, chunk_dims: Vec<usize>, mode: ZfpMode,
+        plist_id: hid_t,
+        n_bytes: u8,
+        chunk_dims: Vec<usize>,
+        mode: ZfpMode,
     ) -> herr_t {
         // get the chunk dimensiosn out of it. Could not reliably get the chunk_dims from plist_id
         // during testing so opted to just pass it in during the build
