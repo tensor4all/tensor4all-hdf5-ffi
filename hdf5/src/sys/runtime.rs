@@ -832,7 +832,7 @@ pub const HDF5_VERSION: Version = Version { major: 1, minor: 14, micro: 0 };
 // Library management
 // =============================================================================
 
-static LIBRARY: OnceLock<Library> = OnceLock::new();
+static LIBRARY: OnceLock<&'static Library> = OnceLock::new();
 static LIBRARY_PATH: OnceLock<String> = OnceLock::new();
 static HDF5_RUNTIME_VERSION: OnceLock<Version> = OnceLock::new();
 
@@ -841,7 +841,7 @@ pub static LOCK: ReentrantMutex<()> = ReentrantMutex::new(());
 
 /// Get the library handle
 fn get_library() -> &'static Library {
-    LIBRARY.get().expect("HDF5 library not initialized. Call hdf5::sys::init() first.")
+    *LIBRARY.get().expect("HDF5 library not initialized. Call hdf5::sys::init() first.")
 }
 
 /// Initialize the HDF5 library by loading it from the specified path.
@@ -871,6 +871,13 @@ pub fn init(path: Option<&str>) -> Result<(), String> {
 
     let library = unsafe { Library::new(&lib_path) }
         .map_err(|e| format!("Failed to load HDF5 library from {}: {}", lib_path, e))?;
+
+    // Leak the library handle to prevent dlclose() on exit.
+    // HDF5 has problematic cleanup routines that can cause "infinite loop closing library"
+    // and SIGSEGV if the library is unloaded while HDF5 internal state still exists.
+    // This is safe because we only load the library once per process and it should
+    // remain loaded until process exit.
+    let library = Box::leak(Box::new(library));
 
     LIBRARY.set(library).map_err(|_| "Library already initialized".to_string())?;
     LIBRARY_PATH.set(lib_path).map_err(|_| "Library path already set".to_string())?;
