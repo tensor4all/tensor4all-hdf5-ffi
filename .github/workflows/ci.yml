@@ -89,7 +89,8 @@ jobs:
         run: cargo build --workspace --verbose
       - name: Run tests
         shell: bash -el {0}
-        run: cargo test --workspace --verbose
+        # Run with single thread to avoid parallel execution issues on Linux
+        run: cargo test --workspace --verbose -- --test-threads=1
 
   test-features:
     name: test features (${{ matrix.features }})
@@ -123,7 +124,7 @@ jobs:
         run: cargo build --workspace --features "${{ matrix.features }}" --verbose
       - name: Test with features
         shell: bash -el {0}
-        run: cargo test --workspace --features "${{ matrix.features }}" --verbose
+        run: cargo test --workspace --features "${{ matrix.features }}" --verbose -- --test-threads=1
 
   macos:
     name: macOS
