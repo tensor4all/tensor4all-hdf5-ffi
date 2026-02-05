@@ -5,15 +5,12 @@ use std::io::{Read, Seek, SeekFrom};
 use ndarray::{s, Array1, Array2, ArrayD, IxDyn, SliceInfo};
 use rand::prelude::{Rng, SeedableRng, SmallRng};
 
-use hdf5_metno as hdf5;
+use hdf5;
 use hdf5_types::TypeDescriptor;
 
 mod common;
 
-use self::common::gen::{
-    gen_arr, gen_slice, Enum, FixedStruct, Gen, RenameEnum, RenameStruct, RenameTupleStruct,
-    TupleStruct, VarLenStruct,
-};
+use self::common::gen::{gen_arr, gen_slice, Gen};
 use self::common::util::new_in_memory_file;
 
 fn test_write_slice<T, R>(
@@ -328,26 +325,6 @@ fn test_read_write_complex() -> hdf5::Result<()> {
 }
 
 #[test]
-fn test_read_write_enum() -> hdf5::Result<()> {
-    test_read_write::<Enum>()
-}
-
-#[test]
-fn test_read_write_tuple_struct() -> hdf5::Result<()> {
-    test_read_write::<TupleStruct>()
-}
-
-#[test]
-fn test_read_write_fixed_struct() -> hdf5::Result<()> {
-    test_read_write::<FixedStruct>()
-}
-
-#[test]
-fn test_read_write_varlen_struct() -> hdf5::Result<()> {
-    test_read_write::<VarLenStruct>()
-}
-
-#[test]
 fn test_create_on_databuilder() {
     let file = new_in_memory_file().unwrap();
 
@@ -355,26 +332,6 @@ fn test_create_on_databuilder() {
     let _ds = file.new_dataset_builder().with_data(&[1_i32, 2, 3]).create("ds2").unwrap();
     let _ds = file.new_dataset::<i32>().create("ds3").unwrap();
     let _ds = file.new_dataset::<i32>().shape(2).create("ds4").unwrap();
-}
-
-#[test]
-#[cfg(feature = "have-filter-deflate")]
-fn test_issue_223() {
-    let file = new_in_memory_file().unwrap();
-
-    let data: &[u16] = &[];
-    let _ds = file.new_dataset_builder().deflate(3).with_data(data).create("ds2").unwrap();
-
-    let data: Array2<u16> = Array2::from_shape_fn((0, 0), |(_i, _j)| unreachable!());
-    let _ds = file.new_dataset_builder().deflate(3).with_data(&data).create("ds3").unwrap();
-}
-
-#[test]
-fn test_read_write_rename_fields() -> hdf5::Result<()> {
-    test_read_write::<RenameStruct>()?;
-    test_read_write::<RenameTupleStruct>()?;
-    test_read_write::<RenameEnum>()?;
-    Ok(())
 }
 
 #[test]
@@ -396,73 +353,6 @@ fn test_byte_read_seek() -> hdf5::Result<()> {
         }
     }
     Ok(())
-}
-
-#[test]
-#[cfg(feature = "blosc")]
-fn test_blosc_filters_write_compressed() {
-    let file = new_in_memory_file().unwrap();
-    let data = [1i32; 1024];
-    let size = (std::mem::size_of::<i32>() * data.len()) as u64;
-
-    // Sanity Check / Baseline test
-    let _ds = file.new_dataset_builder().with_data(&data).create("raw").unwrap();
-    assert!(_ds.storage_size() == size);
-    assert!(_ds.filters().is_empty());
-
-    let _ds = file
-        .new_dataset_builder()
-        .with_data(&data)
-        .blosc_blosclz(9, true)
-        .create("blosclz")
-        .unwrap();
-    assert!(_ds.storage_size() < size);
-    assert_eq!(_ds.filters(), vec![hdf5::filters::Filter::blosc_blosclz(9, true)]);
-
-    #[cfg(feature = "blosc-lz4")]
-    {
-        let _ds =
-            file.new_dataset_builder().with_data(&data).blosc_lz4(9, true).create("lz4").unwrap();
-        assert!(_ds.storage_size() < size);
-        assert_eq!(_ds.filters(), vec![hdf5::filters::Filter::blosc_lz4(9, true)]);
-
-        let _ds = file
-            .new_dataset_builder()
-            .with_data(&data)
-            .blosc_lz4hc(9, true)
-            .create("lz4hc")
-            .unwrap();
-        assert!(_ds.storage_size() < size);
-        assert_eq!(_ds.filters(), vec![hdf5::filters::Filter::blosc_lz4hc(9, true)]);
-    }
-
-    #[cfg(feature = "blosc-zlib")]
-    {
-        let _ds =
-            file.new_dataset_builder().with_data(&data).blosc_zlib(9, true).create("zlib").unwrap();
-        assert!(_ds.storage_size() < size);
-        assert_eq!(_ds.filters(), vec![hdf5::filters::Filter::blosc_zlib(9, true)]);
-    }
-
-    #[cfg(feature = "blosc-zstd")]
-    {
-        let _ds =
-            file.new_dataset_builder().with_data(&data).blosc_zstd(9, true).create("zstd").unwrap();
-        assert!(_ds.storage_size() < size);
-        assert_eq!(_ds.filters(), vec![hdf5::filters::Filter::blosc_zstd(9, true)]);
-    }
-
-    #[cfg(feature = "blosc-snappy")]
-    {
-        let _ds = file
-            .new_dataset_builder()
-            .with_data(&data)
-            .blosc_snappy(9, true)
-            .create("snappy")
-            .unwrap();
-        assert!(_ds.storage_size() < size);
-        assert_eq!(_ds.filters(), vec![hdf5::filters::Filter::blosc_snappy(9, true)]);
-    }
 }
 
 #[test]

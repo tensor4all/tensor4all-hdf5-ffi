@@ -1,6 +1,6 @@
 use super::gen::gen_ascii;
 
-use hdf5_metno as hdf5;
+use hdf5;
 
 pub fn random_filename() -> String {
     gen_ascii(&mut rand::rng(), 8)

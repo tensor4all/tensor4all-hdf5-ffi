@@ -47,9 +47,6 @@
 // RUSTDOCFLAGS="--cfg docsrs" cargo +nightly doc --features blosc,lzf
 #![cfg_attr(docsrs, feature(doc_cfg))]
 
-#[cfg(all(feature = "mpio", not(feature = "have-parallel")))]
-compile_error!("Enabling \"mpio\" feature requires HDF5 library built with MPI support");
-
 mod export {
     pub use crate::{
         class::from_id,
@@ -73,7 +70,6 @@ mod export {
     #[doc(hidden)]
     pub use crate::error::h5check;
 
-    pub use hdf5_derive::H5Type;
     pub use hdf5_types::H5Type;
 
     /// Base types and interfaces for creating compound data types.

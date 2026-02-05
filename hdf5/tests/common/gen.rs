@@ -4,7 +4,6 @@ use std::iter;
 
 use hdf5::types::{FixedAscii, FixedUnicode, VarLenArray, VarLenAscii, VarLenUnicode};
 use hdf5::H5Type;
-use hdf5_metno as hdf5;
 
 use half::f16;
 use ndarray::{ArrayD, SliceInfo, SliceInfoElem};
@@ -12,7 +11,7 @@ use num_complex::Complex;
 use rand::distr::StandardUniform;
 use rand::distr::{Alphanumeric, Uniform};
 use rand::prelude::Rng;
-use rand::prelude::{Distribution, IndexedRandom};
+use rand::prelude::Distribution;
 
 pub fn gen_shape<R: Rng + ?Sized>(rng: &mut R, ndim: usize) -> Vec<usize> {
     iter::repeat(()).map(|_| rng.random_range(0..11)).take(ndim).collect()
@@ -192,99 +191,5 @@ impl<T: Gen + Copy> Gen for VarLenArray<T> {
             v.push(Gen::random(rng));
         }
         VarLenArray::from_slice(&v)
-    }
-}
-
-#[derive(H5Type, Clone, Copy, Debug, PartialEq)]
-#[repr(i16)]
-pub enum Enum {
-    X = -2,
-    Y = 3,
-}
-
-impl Gen for Enum {
-    fn random<R: Rng + ?Sized>(rng: &mut R) -> Self {
-        *[Enum::X, Enum::Y].choose(rng).unwrap()
-    }
-}
-
-#[derive(H5Type, Clone, Copy, Debug, PartialEq)]
-#[repr(C)]
-pub struct TupleStruct(bool, Enum);
-
-impl Gen for TupleStruct {
-    fn random<R: Rng + ?Sized>(rng: &mut R) -> Self {
-        TupleStruct(Gen::random(rng), Gen::random(rng))
-    }
-}
-
-#[derive(H5Type, Clone, Debug, PartialEq)]
-#[repr(C)]
-pub struct FixedStruct {
-    fa: FixedAscii<3>,
-    fu: FixedUnicode<11>,
-    array: [TupleStruct; 2],
-}
-
-impl Gen for FixedStruct {
-    fn random<R: Rng + ?Sized>(rng: &mut R) -> Self {
-        FixedStruct {
-            fa: Gen::random(rng),
-            fu: Gen::random(rng),
-            array: [Gen::random(rng), Gen::random(rng)],
-        }
-    }
-}
-
-#[derive(H5Type, Clone, Debug, PartialEq)]
-#[repr(C)]
-pub struct VarLenStruct {
-    va: VarLenAscii,
-    vu: VarLenUnicode,
-    vla: VarLenArray<Enum>,
-}
-
-impl Gen for VarLenStruct {
-    fn random<R: Rng + ?Sized>(rng: &mut R) -> Self {
-        VarLenStruct { va: Gen::random(rng), vu: Gen::random(rng), vla: Gen::random(rng) }
-    }
-}
-
-#[derive(H5Type, Clone, Debug, PartialEq)]
-#[repr(C)]
-pub struct RenameStruct {
-    first: i32,
-    #[hdf5(rename = "field.second")]
-    second: i64,
-}
-
-impl Gen for RenameStruct {
-    fn random<R: Rng + ?Sized>(rng: &mut R) -> Self {
-        RenameStruct { first: Gen::random(rng), second: Gen::random(rng) }
-    }
-}
-
-#[derive(H5Type, Clone, Copy, Debug, PartialEq)]
-#[repr(C)]
-pub struct RenameTupleStruct(#[hdf5(rename = "my_boolean")] bool, #[hdf5(rename = "my_enum")] Enum);
-
-impl Gen for RenameTupleStruct {
-    fn random<R: Rng + ?Sized>(rng: &mut R) -> Self {
-        RenameTupleStruct(Gen::random(rng), Gen::random(rng))
-    }
-}
-
-#[derive(H5Type, Clone, Copy, Debug, PartialEq)]
-#[repr(i16)]
-pub enum RenameEnum {
-    #[hdf5(rename = "coord.x")]
-    X = -2,
-    #[hdf5(rename = "coord.y")]
-    Y = 3,
-}
-
-impl Gen for RenameEnum {
-    fn random<R: Rng + ?Sized>(rng: &mut R) -> Self {
-        *[RenameEnum::X, RenameEnum::Y].choose(rng).unwrap()
     }
 }
