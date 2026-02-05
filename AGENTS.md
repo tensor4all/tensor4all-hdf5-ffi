@@ -1,4 +1,4 @@
-# Agent Guidelines for tensor4all-hdf5-ffi
+# Agent Guidelines for hdf5-rt
 
 Read `README.md` before starting work.
 
@@ -77,7 +77,7 @@ gh pr create --base main --title "Title" --body "Desc"
 gh pr merge --auto --squash --delete-branch
 
 # Large: worktree workflow
-git worktree add ../tensor4all-hdf5-ffi-feature -b feature
+git worktree add ../hdf5-rt-feature -b feature
 
 # Check PR before update
 gh pr view <NUM> --json state  # Never push to merged PR

@@ -16,3 +16,4 @@ tests/julia/Manifest.toml
 
 # Python virtual environment
 tests/python/.venv/
+status.md

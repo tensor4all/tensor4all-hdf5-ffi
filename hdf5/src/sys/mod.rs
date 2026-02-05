@@ -266,8 +266,9 @@ pub mod h5l {
 
 pub mod h5o {
     pub use super::runtime::{
-        H5O_info2_t, H5O_token_t, H5O_type_t, H5Oclose, H5Ocopy, H5Oget_comment, H5Oget_info3,
-        H5Oget_info_by_name3, H5Oopen, H5Oopen_by_token, H5Oset_comment, H5O_COPY_ALL,
+        H5O_info1_t, H5O_info2_t, H5O_token_t, H5O_type_t, H5Oclose, H5Ocopy, H5Oget_comment,
+        H5Oget_info1, H5Oget_info3, H5Oget_info_by_name1, H5Oget_info_by_name3, H5Oopen,
+        H5Oopen_by_addr, H5Oopen_by_token, H5Oset_comment, H5O_COPY_ALL,
         H5O_COPY_EXPAND_EXT_LINK_FLAG, H5O_COPY_EXPAND_REFERENCE_FLAG,
         H5O_COPY_EXPAND_SOFT_LINK_FLAG, H5O_COPY_MERGE_COMMITTED_DTYPE_FLAG,
         H5O_COPY_PRESERVE_NULL_FLAG, H5O_COPY_SHALLOW_HIERARCHY_FLAG, H5O_COPY_WITHOUT_ATTR_FLAG,
@@ -432,7 +433,7 @@ pub mod h5r {
 pub mod h5s {
     pub use super::runtime::{
         H5S_class_t, H5S_sel_type, H5S_seloper_t, H5Sclose, H5Scopy, H5Screate, H5Screate_simple,
-        H5Sdecode, H5Sencode2, H5Sget_regular_hyperslab, H5Sget_select_elem_npoints,
+        H5Sdecode, H5Sencode, H5Sget_regular_hyperslab, H5Sget_select_elem_npoints,
         H5Sget_select_elem_pointlist, H5Sget_select_npoints, H5Sget_select_type,
         H5Sget_simple_extent_dims, H5Sget_simple_extent_ndims, H5Sget_simple_extent_npoints,
         H5Sget_simple_extent_type, H5Sis_regular_hyperslab, H5Sselect_all, H5Sselect_elements,
@@ -627,4 +628,16 @@ pub fn is_initialized() -> bool {
 /// Get the library path.
 pub fn library_path() -> Option<String> {
     runtime::library_path()
+}
+
+pub use runtime::Version;
+
+/// Get the detected HDF5 library version.
+pub fn hdf5_version() -> Option<Version> {
+    runtime::hdf5_version()
+}
+
+/// Check if HDF5 version is at least the specified version.
+pub fn hdf5_version_at_least(major: u8, minor: u8, micro: u8) -> bool {
+    runtime::hdf5_version_at_least(major, minor, micro)
 }

@@ -35,62 +35,58 @@ jobs:
         run: cargo clippy --workspace -- -D warnings -A clippy::multiple-crate-versions
 
   test:
-    name: test (${{ matrix.os }})
+    name: test (${{ matrix.os }}, HDF5 ${{ matrix.hdf5 }})
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-22.04, ubuntu-24.04]
+        include:
+          # Ubuntu with system HDF5 1.10.x (minimum supported version)
+          - os: ubuntu-22.04
+            hdf5: "1.10"
+            hdf5_source: "apt"
+          # Ubuntu with conda HDF5 1.12.x
+          - os: ubuntu-22.04
+            hdf5: "1.12"
+            hdf5_source: "conda"
+          # Ubuntu with conda HDF5 1.14.x
+          - os: ubuntu-24.04
+            hdf5: "1.14"
+            hdf5_source: "conda"
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
       - name: Install Rust
         uses: dtolnay/rust-toolchain@stable
+      - name: Install HDF5 from apt (1.10.x)
+        if: matrix.hdf5_source == 'apt'
+        run: sudo apt-get update && sudo apt-get install -y libhdf5-dev
       - name: Setup Conda
+        if: matrix.hdf5_source == 'conda'
         uses: conda-incubator/setup-miniconda@v3
         with:
           auto-update-conda: true
           python-version: "3.11"
-      - name: Install HDF5 1.12+ from conda-forge
+      - name: Install HDF5 from conda-forge
+        if: matrix.hdf5_source == 'conda'
         shell: bash -el {0}
-        run: conda install -c conda-forge hdf5>=1.12
-      - name: Build
+        run: conda install -c conda-forge "hdf5>=${{ matrix.hdf5 }},<${{ matrix.hdf5 }}.99"
+      - name: Set HDF5 library path (conda)
+        if: matrix.hdf5_source == 'conda'
         shell: bash -el {0}
-        run: cargo build --workspace --verbose
+        run: echo "LD_LIBRARY_PATH=$CONDA_PREFIX/lib:$LD_LIBRARY_PATH" >> $GITHUB_ENV
+      - name: Show HDF5 version
+        shell: bash -el {0}
+        run: |
+          if command -v h5dump &> /dev/null; then
+            h5dump --version
+          else
+            echo "h5dump not in PATH, checking library..."
+            find /usr -name "libhdf5*.so*" 2>/dev/null | head -5 || true
+          fi
       - name: Run tests
         shell: bash -el {0}
-        run: cargo test --workspace --verbose
-
-  test-features:
-    name: test features (${{ matrix.features }})
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        features:
-          - ""
-          - "complex"
-          - "f16"
-          - "complex,f16"
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v6
-      - name: Install Rust
-        uses: dtolnay/rust-toolchain@stable
-      - name: Setup Conda
-        uses: conda-incubator/setup-miniconda@v3
-        with:
-          auto-update-conda: true
-          python-version: "3.11"
-      - name: Install HDF5 1.12+ from conda-forge
-        shell: bash -el {0}
-        run: conda install -c conda-forge hdf5>=1.12
-      - name: Build with features
-        shell: bash -el {0}
-        run: cargo build --workspace --features "${{ matrix.features }}" --verbose
-      - name: Test with features
-        shell: bash -el {0}
-        run: cargo test --workspace --features "${{ matrix.features }}" --verbose
+        run: cargo test --workspace --all-features --verbose
 
   macos:
     name: macOS
@@ -111,7 +107,7 @@ jobs:
 
   interop-julia:
     name: Julia interop
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
@@ -120,22 +116,12 @@ jobs:
       - name: Install Julia
         uses: julia-actions/setup-julia@v2
         with:
-          version: '1.10'
-      - name: Setup Conda
-        uses: conda-incubator/setup-miniconda@v3
-        with:
-          auto-update-conda: true
-          python-version: "3.11"
-      - name: Install HDF5 1.12+ from conda-forge
-        shell: bash -el {0}
-        run: conda install -c conda-forge hdf5>=1.12
+          version: '1.11'
       - name: Setup Julia project
-        shell: bash -el {0}
         run: |
           cd tests/julia
           julia --project=. -e 'using Pkg; Pkg.instantiate()'
       - name: Run Julia interop tests
-        shell: bash -el {0}
         run: |
           cd tests/julia
           julia --project=. test_interop.jl
@@ -156,6 +142,9 @@ jobs:
       - name: Install HDF5 1.12+ and h5py from conda-forge
         shell: bash -el {0}
         run: conda install -c conda-forge hdf5>=1.12 h5py
+      - name: Set HDF5 library path
+        shell: bash -el {0}
+        run: echo "LD_LIBRARY_PATH=$CONDA_PREFIX/lib:$LD_LIBRARY_PATH" >> $GITHUB_ENV
       - name: Install Python dependencies
         shell: bash -el {0}
         run: |

@@ -1,7 +1,7 @@
 [package]
-name = "tensor4all-hdf5-ffi"
+name = "hdf5-rt"
 readme = "../README.md"
-description = "Thread-safe Rust bindings for the HDF5 library - fork for tensor4all"
+description = "Thread-safe Rust bindings for the HDF5 library with runtime loading"
 build = "build.rs"
 categories = ["science", "filesystem"]
 version = "0.1.0"
