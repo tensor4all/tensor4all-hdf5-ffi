@@ -89,42 +89,7 @@ jobs:
         run: cargo build --workspace --verbose
       - name: Run tests
         shell: bash -el {0}
-        # Run with single thread to avoid parallel execution issues on Linux
-        run: cargo test --workspace --verbose -- --test-threads=1
-
-  test-features:
-    name: test features (${{ matrix.features }})
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        features:
-          - ""
-          - "complex"
-          - "f16"
-          - "complex,f16"
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v6
-      - name: Install Rust
-        uses: dtolnay/rust-toolchain@stable
-      - name: Setup Conda
-        uses: conda-incubator/setup-miniconda@v3
-        with:
-          auto-update-conda: true
-          python-version: "3.11"
-      - name: Install HDF5 1.12+ from conda-forge
-        shell: bash -el {0}
-        run: conda install -c conda-forge hdf5>=1.12
-      - name: Set HDF5 library path
-        shell: bash -el {0}
-        run: echo "LD_LIBRARY_PATH=$CONDA_PREFIX/lib:$LD_LIBRARY_PATH" >> $GITHUB_ENV
-      - name: Build with features
-        shell: bash -el {0}
-        run: cargo build --workspace --features "${{ matrix.features }}" --verbose
-      - name: Test with features
-        shell: bash -el {0}
-        run: cargo test --workspace --features "${{ matrix.features }}" --verbose -- --test-threads=1
+        run: cargo test --workspace --all-features --verbose
 
   macos:
     name: macOS

@@ -15,4 +15,4 @@ sweep.timestamp
 tests/julia/Manifest.toml
 
 # Python virtual environment
-tests/python/.venv/
+tests/python/.venv/*.disabled
